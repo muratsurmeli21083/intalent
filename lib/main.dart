@@ -1,4 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'screens/login_screen.dart';
+import 'screens/hr_dashboard_screen.dart';
 
 // TODO: Replace with your actual Supabase URL and Anon Key
 const String supabaseUrl = 'sb_publishable__EzbBggvn5vbfuos7OD7Gg_1t8xIWfe';
@@ -31,7 +33,7 @@ class InTalentApp extends StatelessWidget {
           secondary: const Color(0xFF666666),
           surface: Colors.white,
         ),
-        scaffoldBackgroundColor: Colors.white,
+        scaffoldBackgroundColor: const Color(0xFFF8F9FA),
         appBarTheme: const AppBarTheme(
           backgroundColor: Colors.white,
           elevation: 0,
@@ -42,35 +44,16 @@ class InTalentApp extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF003EC7),
-            foregroundColor: Colors.white,
-            minimumSize: const Size(double.infinity, 50),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            elevation: 0,
-          ),
-        ),
-        inputDecorationTheme: InputDecorationTheme(
-          filled: true,
-          fillColor: const Color(0xFFF8F9FA),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide.none,
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide.none,
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: Color(0xFF003EC7), width: 1),
-          ),
-        ),
       ),
-      home: const LoginScreen(),
+      home: LayoutBuilder(
+        builder: (context, constraints) {
+          if (constraints.maxWidth > 900) {
+            return const HrDashboardScreen();
+          } else {
+            return const LoginScreen();
+          }
+        },
+      ),
     );
   }
 }
