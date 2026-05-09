@@ -20,7 +20,7 @@ class AnalysisScreen extends StatelessWidget {
               width: double.infinity,
               color: Colors.white,
               padding: const EdgeInsets.all(24),
-              child: Column(
+              child: const Column(
                 children: [
                   Stack(
                     alignment: Alignment.center,
@@ -31,11 +31,11 @@ class AnalysisScreen extends StatelessWidget {
                         child: CircularProgressIndicator(
                           value: 0.85,
                           strokeWidth: 8,
-                          backgroundColor: const Color(0xFFEEEEEE),
-                          color: const Color(0xFF003EC7),
+                          backgroundColor: Color(0xFFEEEEEE),
+                          color: Color(0xFF003EC7),
                         ),
                       ),
-                      const Column(
+                      Column(
                         children: [
                           Text(
                             '%85',
@@ -53,12 +53,12 @@ class AnalysisScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16),
-                  const Text(
+                  SizedBox(height: 16),
+                  Text(
                     'Profil Analiz Gücü',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  const Text(
+                  Text(
                     'Testleri tamamlayarak liyakat skorunu artır.',
                     textAlign: TextAlign.center,
                     style: TextStyle(color: Color(0xFF666666)),
@@ -162,6 +162,14 @@ class AnalysisScreen extends StatelessWidget {
   }
 
   Widget _buildTestList(List<Widget> items) {
+    List<Widget> separatedItems = [];
+    for (int i = 0; i < items.length; i++) {
+      separatedItems.add(items[i]);
+      if (i < items.length - 1) {
+        separatedItems.add(const Divider(height: 1, indent: 56, endIndent: 16, color: Color(0xFFEEEEEE)));
+      }
+    }
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
@@ -169,37 +177,65 @@ class AnalysisScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: const Color(0xFFEEEEEE)),
       ),
-      child: Column(children: items),
+      child: Column(children: separatedItems),
     );
   }
 
   Widget _buildTestItem(String title, String duration, IconData icon) {
-    return ListTile(
-      leading: Icon(icon, color: const Color(0xFF666666)),
-      title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
-      subtitle: Text(duration, style: const TextStyle(fontSize: 12)),
-      trailing: const Icon(Icons.chevron_right, color: Color(0xFFCCCCCC)),
-      onTap: () {},
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: ListTile(
+        leading: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF8F9FA),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(icon, color: const Color(0xFF666666), size: 20),
+        ),
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+        subtitle: Text(duration, style: const TextStyle(fontSize: 11, color: Color(0xFF999999))),
+        trailing: _buildStartButton(),
+        onTap: () {},
+      ),
     );
   }
 
   Widget _buildExpertItem(String title, String type, IconData icon) {
-    return ListTile(
-      leading: Icon(icon, color: const Color(0xFF003EC7)),
-      title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
-      subtitle: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-        decoration: BoxDecoration(
-          color: const Color(0xFF003EC7).withOpacity(0.1),
-          borderRadius: BorderRadius.circular(4),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: ListTile(
+        leading: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: const Color(0xFF003EC7).withOpacity(0.05),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(icon, color: const Color(0xFF003EC7), size: 20),
         ),
-        child: Text(
-          type,
-          style: const TextStyle(color: Color(0xFF003EC7), fontSize: 10, fontWeight: FontWeight.bold),
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+        subtitle: Text(type, style: const TextStyle(color: Color(0xFF003EC7), fontSize: 10, fontWeight: FontWeight.bold)),
+        trailing: _buildStartButton(),
+        onTap: () {},
+      ),
+    );
+  }
+
+  Widget _buildStartButton() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: const Color(0xFF003EC7).withOpacity(0.1),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: const Text(
+        'Başla',
+        style: TextStyle(
+          color: Color(0xFF003EC7),
+          fontWeight: FontWeight.bold,
+          fontSize: 12,
         ),
       ),
-      trailing: const Icon(Icons.play_circle_outline, color: Color(0xFF003EC7)),
-      onTap: () {},
     );
   }
 
@@ -213,3 +249,4 @@ class AnalysisScreen extends StatelessWidget {
     );
   }
 }
+

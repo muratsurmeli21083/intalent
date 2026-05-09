@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'job_detail_screen.dart';
 
 class DiscoverScreen extends StatelessWidget {
   const DiscoverScreen({super.key});
@@ -49,10 +50,10 @@ class DiscoverScreen extends StatelessWidget {
               physics: const NeverScrollableScrollPhysics(),
               padding: const EdgeInsets.symmetric(horizontal: 16),
               children: [
-                _buildJobListItem('Lead Product Designer', 'Revolut', 'Londra, UK', '2 gün önce', '94% Uyum'),
-                _buildJobListItem('UI Engineer', 'Figma', 'San Francisco, US', '5 gün önce', '88% Uyum'),
-                _buildJobListItem('Senior Content Strategist', 'Netflix', 'Los Angeles, US', '1 hafta önce', '82% Uyum'),
-                _buildJobListItem('Flutter Developer', 'Google', 'Remote', '3 saat önce', '91% Uyum'),
+                _buildJobListItem(context, 'Lead Product Designer', 'Revolut', 'Londra, UK', '2 gün önce', '94% Uyum'),
+                _buildJobListItem(context, 'UI Engineer', 'Figma', 'San Francisco, US', '5 gün önce', '88% Uyum'),
+                _buildJobListItem(context, 'Senior Content Strategist', 'Netflix', 'Los Angeles, US', '1 hafta önce', '82% Uyum'),
+                _buildJobListItem(context, 'Flutter Developer', 'Google', 'Remote', '3 saat önce', '91% Uyum'),
               ],
             ),
             const SizedBox(height: 24),
@@ -142,59 +143,73 @@ class DiscoverScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildJobListItem(String title, String company, String location, String time, String matchScore) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFEEEEEE)),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              color: const Color(0xFFF8F9FA),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: const Icon(Icons.business, color: Color(0xFF666666)),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                ),
-                Text(
-                  company,
-                  style: const TextStyle(color: Color(0xFF003EC7), fontSize: 13, fontWeight: FontWeight.w500),
-                ),
-                Text(
-                  location,
-                  style: const TextStyle(color: Color(0xFF666666), fontSize: 12),
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Text(time, style: const TextStyle(color: Color(0xFF999999), fontSize: 11)),
-                    const SizedBox(width: 12),
-                    const Icon(Icons.verified, size: 12, color: Colors.green),
-                    const SizedBox(width: 4),
-                    Text(matchScore, style: const TextStyle(color: Colors.green, fontSize: 11, fontWeight: FontWeight.bold)),
-                  ],
-                ),
-              ],
+  Widget _buildJobListItem(BuildContext context, String title, String company, String location, String time, String matchScore) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => JobDetailScreen(
+              title: title,
+              company: company,
+              location: location,
             ),
           ),
-          const Icon(Icons.bookmark_border, color: Color(0xFFCCCCCC)),
-        ],
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: const Color(0xFFEEEEEE)),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: const Color(0xFFF8F9FA),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(Icons.business, color: Color(0xFF666666)),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                  ),
+                  Text(
+                    company,
+                    style: const TextStyle(color: Color(0xFF003EC7), fontSize: 13, fontWeight: FontWeight.w500),
+                  ),
+                  Text(
+                    location,
+                    style: const TextStyle(color: Color(0xFF666666), fontSize: 12),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Text(time, style: const TextStyle(color: Color(0xFF999999), fontSize: 11)),
+                      const SizedBox(width: 12),
+                      const Icon(Icons.verified, size: 12, color: Colors.green),
+                      const SizedBox(width: 4),
+                      Text(matchScore, style: const TextStyle(color: Colors.green, fontSize: 11, fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const Icon(Icons.bookmark_border, color: Color(0xFFCCCCCC)),
+          ],
+        ),
       ),
     );
   }

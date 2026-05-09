@@ -75,10 +75,10 @@ class _AiCoachScreenState extends State<AiCoachScreen> {
           if (isAi)
             Container(
               margin: const EdgeInsets.only(right: 8),
-              child: CircleAvatar(
-                backgroundColor: const Color(0xFF003EC7),
+              child: const CircleAvatar(
+                backgroundColor: Color(0xFF003EC7),
                 radius: 16,
-                child: const Icon(Icons.auto_awesome, color: Colors.white, size: 16),
+                child: Icon(Icons.auto_awesome, color: Colors.white, size: 16),
               ),
             ),
           Flexible(

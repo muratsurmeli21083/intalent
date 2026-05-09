@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'preferences_screen.dart';
 import 'main_shell.dart';
 
 class LoginScreen extends StatelessWidget {
