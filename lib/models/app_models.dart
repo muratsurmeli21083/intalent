@@ -2,6 +2,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class UserProfile {
   final String id;
+  final String? tenantId;
   final String? firstName;
   final String? lastName;
   final String? email;
@@ -10,6 +11,7 @@ class UserProfile {
 
   UserProfile({
     required this.id,
+    this.tenantId,
     this.firstName,
     this.lastName,
     this.email,
@@ -19,6 +21,7 @@ class UserProfile {
 
   Map<String, dynamic> toJson() => {
     'id': id,
+    'tenant_id': tenantId,
     'first_name': firstName,
     'last_name': lastName,
     'email': email,
@@ -28,6 +31,7 @@ class UserProfile {
 
   factory UserProfile.fromJson(Map<String, dynamic> json) => UserProfile(
     id: json['id'],
+    tenantId: json['tenant_id'],
     firstName: json['first_name'],
     lastName: json['last_name'],
     email: json['email'],
