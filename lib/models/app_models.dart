@@ -1,0 +1,105 @@
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+class UserProfile {
+  final String id;
+  final String? firstName;
+  final String? lastName;
+  final String? email;
+  final String role;
+  final String? currentProgressTaskId;
+
+  UserProfile({
+    required this.id,
+    this.firstName,
+    this.lastName,
+    this.email,
+    this.role = 'candidate',
+    this.currentProgressTaskId,
+  });
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'first_name': firstName,
+    'last_name': lastName,
+    'email': email,
+    'role': role,
+    'current_progress_task_id': currentProgressTaskId,
+  };
+
+  factory UserProfile.fromJson(Map<String, dynamic> json) => UserProfile(
+    id: json['id'],
+    firstName: json['first_name'],
+    lastName: json['last_name'],
+    email: json['email'],
+    role: json['role'],
+    currentProgressTaskId: json['current_progress_task_id'],
+  );
+}
+
+class JobModel {
+  final String id;
+  final String title;
+  final String? position;
+  final String? city;
+  final String? definition;
+  final String? logoUrl;
+  final List<String>? requiredTests;
+  final Map<String, dynamic>? requiredCompetencies;
+
+  JobModel({
+    required this.id,
+    required this.title,
+    this.position,
+    this.city,
+    this.definition,
+    this.logoUrl,
+    this.requiredTests,
+    this.requiredCompetencies,
+  });
+
+  factory JobModel.fromJson(Map<String, dynamic> json) => JobModel(
+    id: json['id'],
+    title: json['title'],
+    position: json['position'],
+    city: json['city'],
+    definition: json['definition'],
+    logoUrl: json['logo_url'],
+    requiredTests: List<String>.from(json['required_tests'] ?? []),
+    requiredCompetencies: json['required_competencies'],
+  );
+}
+
+class CompetencyScore {
+  final String id;
+  final String userId;
+  final String taskId;
+  final String competencyName;
+  final double totalScore;
+  final double consistencyIndex;
+
+  CompetencyScore({
+    required this.id,
+    required this.userId,
+    required this.taskId,
+    required this.competencyName,
+    required this.totalScore,
+    required this.consistencyIndex,
+  });
+
+  Map<String, dynamic> toJson() => {
+    'user_id': userId,
+    'task_id': taskId,
+    'competency_name': competencyName,
+    'total_score': totalScore,
+    'consistency_index': consistencyIndex,
+  };
+
+  factory CompetencyScore.fromJson(Map<String, dynamic> json) => CompetencyScore(
+    id: json['id'],
+    userId: json['user_id'],
+    taskId: json['task_id'],
+    competencyName: json['competency_name'],
+    totalScore: (json['total_score'] as num).toDouble(),
+    consistencyIndex: (json['consistency_index'] as num).toDouble(),
+  );
+}
