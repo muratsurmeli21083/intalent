@@ -22,18 +22,13 @@ void main() async {
 final _router = GoRouter(
   initialLocation: '/',
   routes: [
+    // --- ADAY PORTALI ---
     GoRoute(
       path: '/',
-      builder: (context, state) => LayoutBuilder(
-        builder: (context, constraints) {
-          if (constraints.maxWidth > 900) {
-            return const HrDashboardScreen();
-          } else {
-            return const LoginScreen();
-          }
-        },
-      ),
+      builder: (context, state) => const LoginScreen(),
     ),
+    
+    // --- İK PORTALI ---
     GoRoute(
       path: '/recruiter',
       builder: (context, state) => const HrDashboardScreen(),
