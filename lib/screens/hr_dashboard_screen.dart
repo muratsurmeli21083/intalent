@@ -1,9 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:excel/excel.dart' as excel_pkg;
-import 'package:fl_chart/fl_chart.dart';
+import 'package:go_router/go_router.dart';
 import '../services/database_service.dart';
 import '../models/app_models.dart';
+import 'job_wizard_screen.dart';
 
 class HrDashboardScreen extends StatefulWidget {
   const HrDashboardScreen({super.key});
@@ -251,7 +249,7 @@ class _HrDashboardScreenState extends State<HrDashboardScreen> {
                 children: [
                   const Text('Aktif İlanlar', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
                   ElevatedButton.icon(
-                    onPressed: () {},
+                    onPressed: () => context.push('/job-wizard'),
                     icon: const Icon(Icons.add),
                     label: const Text('Yeni İlan Yayınla'),
                     style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF003EC7), foregroundColor: Colors.white),

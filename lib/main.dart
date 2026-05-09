@@ -30,7 +30,13 @@ final _router = GoRouter(
     // --- İK DÜNYASI ---
     GoRoute(
       path: '/recruiter',
+      name: 'hr_dashboard',
       builder: (context, state) => const HrDashboardScreen(),
+    ),
+    GoRoute(
+      path: '/job-wizard',
+      name: 'job_wizard',
+      builder: (context, state) => const JobWizardScreen(),
     ),
   ],
 );
