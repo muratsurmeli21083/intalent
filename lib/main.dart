@@ -14,7 +14,8 @@ void main() async {
   runApp(const InTalentApp());
 }
 
-final _router = GoRouter(
+// GLOBAL ROUTER
+final GoRouter router = GoRouter(
   initialLocation: '/',
   routes: [
     // --- ADAY DÜNYASI ---
@@ -49,7 +50,7 @@ class InTalentApp extends StatelessWidget {
     return MaterialApp.router(
       title: 'InTalent SaaS',
       debugShowCheckedModeBanner: false,
-      routerConfig: _router,
+      routerConfig: router,
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF003EC7)),
