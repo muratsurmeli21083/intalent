@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-fixed-variant": "#39475f",
+                    "on-error": "#ffffff",
+                    "secondary-fixed-dim": "#b9c7e4",
+                    "primary-container": "#0052ff",
+                    "surface-variant": "#e0e3e5",
+                    "secondary-container": "#d2e0fe",
+                    "outline": "#737688",
+                    "background": "#f7f9fb",
+                    "inverse-surface": "#2d3133",
+                    "surface": "#f7f9fb",
+                    "error": "#ba1a1a",
+                    "outline-variant": "#c3c5d9",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary": "#515f78",
+                    "on-tertiary-fixed": "#002019",
+                    "on-surface-variant": "#434656",
+                    "surface-container-highest": "#e0e3e5",
+                    "on-primary": "#ffffff",
+                    "inverse-on-surface": "#eff1f3",
+                    "surface-container-high": "#e6e8ea",
+                    "error-container": "#ffdad6",
+                    "surface-dim": "#d8dadc",
+                    "surface-tint": "#004ced",
+                    "tertiary-container": "#00745f",
+                    "on-secondary-container": "#55637d",
+                    "on-tertiary-container": "#62fed9",
+                    "tertiary": "#005949",
+                    "primary-fixed": "#dde1ff",
+                    "on-primary-fixed": "#001452",
+                    "secondary-fixed": "#d6e3ff",
+                    "on-secondary": "#ffffff",
+                    "surface-bright": "#f7f9fb",
+                    "on-secondary-fixed": "#0d1c32",
+                    "inverse-primary": "#b7c4ff",
+                    "primary-fixed-dim": "#b7c4ff",
+                    "on-background": "#191c1e",
+                    "on-primary-fixed-variant": "#0038b6",
+                    "on-tertiary-fixed-variant": "#005142",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-fixed-dim": "#38debb",
+                    "primary": "#003ec7",
+                    "surface-container": "#eceef0",
+                    "tertiary-fixed": "#5ffbd6",
+                    "on-primary-container": "#dfe3ff",
+                    "surface-container-low": "#f2f4f6",
+                    "on-surface": "#191c1e",
+                    "on-error-container": "#93000a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "xl": "80px",
+                    "margin-desktop": "40px",
+                    "md": "24px",
+                    "xs": "4px",
+                    "lg": "48px",
+                    "gutter": "24px",
+                    "base": "8px",
+                    "margin-mobile": "16px",
+                    "sm": "12px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Inter"],
+                    "label-bold": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "display-xl": ["Inter"],
+                    "numeric-data": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "label-bold": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "display-xl": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "numeric-data": ["14px", {"lineHeight": "1.0", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+        }
+        .bg-glass {
+            backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.7);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface font-body-md text-on-surface min-h-screen pb-24">
+<!-- TopAppBar Shell -->
+<header class="fixed top-0 w-full z-50 flex items-center justify-between px-4 h-16 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm border-b border-slate-200 dark:border-slate-800 font-inter antialiased tracking-tight">
+<div class="flex items-center gap-3">
+<img alt="intalent" class="h-8 object-contain" src="https://lh3.googleusercontent.com/aida/ADBb0ui6KVrYrRA7U3VTA5a-FEciPyigrd2NoJpc8hnw5Bcs1mWiiosaWDEhUq86TfR0qA7C434myFIK1u6baB-es8yI9TqQs-d3jepof49qNDAirjRYC1L1c69z9KxYtwtGObwm_QrEQC5iozsBrflGl-0Mcdz89grGB0-A-sUDcJ0JqYV2mU5HnhvrhTSuhkV80JUCDqpyWva3Nr7XoSpKLsJXCuaV3CfFRp0rPwOIyQUDdAwjYzax9hHSkhUkvJXQoNy73V8o4rY2"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors p-2 rounded-full active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</div>
+</header>
+<main class="mt-16 p-4 space-y-6">
+<!-- Profile & Identity Section -->
+<section class="relative bg-surface-container-lowest rounded-full p-6 border border-outline-variant/30 flex flex-col items-center text-center">
+<div class="relative mb-4">
+<div class="w-24 h-24 rounded-full p-1 bg-gradient-to-tr from-primary to-tertiary">
+<img alt="Caner Demir" class="w-full h-full rounded-full object-cover border-2 border-white" data-alt="High-resolution close-up portrait of a professional man in his 30s. He has a warm, approachable expression. The lighting is bright and airy, typical of a modern professional photography studio. The image is crisp, showing clear details of his features, set against a neutral, high-key background that blends seamlessly with a white UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYZvGaaE87JFMLcbHDaXzFAvz3XWJQnaXwqOa13iCNr-IH_Hd8LQdnNITa8F5E3SPAddrz_wNKb_hqWoVN4SqCGQPwXNvYgdeL97bHoMBr6ZDqEIzbs88PH9IZlurenTPL2LTl6Oc78SCFFCOe7jOmFA7lEYvsLjZinSt4-1f_bG0S_B4foikB5zelGwRypiq5cx2hixUMMgbxPv_2V8cX6sgGX4sal5QoZP5Fcfo3Idb4FwaDwQB53EzZYf7qWa8fWddRZIkNCm0"/>
+</div>
+<div class="absolute -bottom-1 -right-1 bg-primary text-white p-1 rounded-full border-2 border-white flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<h1 class="font-headline-md text-headline-md text-on-surface mb-1">Caner Demir</h1>
+<p class="font-body-sm text-body-sm text-secondary mb-3">Senior Product Designer &amp; Merit Analyst</p>
+<div class="inline-flex items-center gap-2 bg-primary-container/10 px-4 py-1.5 rounded-full border border-primary-container/20">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">shield_with_heart</span>
+<span class="text-primary font-label-bold text-label-bold uppercase tracking-widest">Verify Rozeti Aktif</span>
+</div>
+</section>
+<!-- Bento Grid: Education & Experience -->
+<div class="grid grid-cols-1 gap-4">
+<!-- Experience -->
+<section class="bg-surface-container-lowest rounded-full p-6 border border-outline-variant/30">
+<div class="flex items-center justify-between mb-4">
+<h2 class="font-headline-md text-headline-md flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">work_outline</span>
+                        Deneyim
+                    </h2>
+<button class="text-primary hover:bg-primary-container/5 p-2 rounded-full transition-colors active:scale-90">
+<span class="material-symbols-outlined">edit</span>
+</button>
+</div>
+<div class="space-y-6">
+<div class="relative pl-6 border-l border-outline-variant">
+<div class="absolute -left-[5px] top-0 w-2 h-2 rounded-full bg-primary"></div>
+<h3 class="font-label-bold text-on-surface">Senior Designer</h3>
+<p class="text-body-sm text-secondary">TechLab Global • 2021 - Günümüz</p>
+<p class="text-body-sm text-on-surface-variant mt-2">Bento grid sistemleri ve Merit analitik dashboard tasarımları üzerine uzmanlaşmış ekip liderliği.</p>
+</div>
+<div class="relative pl-6 border-l border-outline-variant">
+<div class="absolute -left-[5px] top-0 w-2 h-2 rounded-full bg-outline"></div>
+<h3 class="font-label-bold text-on-surface">Product Designer</h3>
+<p class="text-body-sm text-secondary">Creative Sync • 2018 - 2021</p>
+</div>
+</div>
+</section>
+<!-- Education -->
+<section class="bg-surface-container-lowest rounded-full p-6 border border-outline-variant/30">
+<div class="flex items-center justify-between mb-4">
+<h2 class="font-headline-md text-headline-md flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">school</span>
+                        Eğitim
+                    </h2>
+<button class="text-primary hover:bg-primary-container/5 p-2 rounded-full transition-colors active:scale-90">
+<span class="material-symbols-outlined">add_circle</span>
+</button>
+</div>
+<div class="space-y-4">
+<div class="flex gap-4">
+<div class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-secondary">account_balance</span>
+</div>
+<div>
+<h3 class="font-label-bold text-on-surface">Mimar Sinan Güzel Sanatlar Üniversitesi</h3>
+<p class="text-body-sm text-secondary">Grafik Tasarım Bölümü</p>
+<p class="text-body-sm text-outline">Lisans • 2014 - 2018</p>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Reference Management Section -->
+<section class="bg-surface-container-lowest rounded-full p-6 border border-outline-variant/30 space-y-6">
+<div class="flex flex-col gap-2">
+<h2 class="font-headline-md text-headline-md tracking-tight">REFERANS YÖNETİMİ</h2>
+<p class="text-body-sm text-secondary">Yeteneklerinizi onaylayacak profesyonel ağınızla etkileşime geçin.</p>
+</div>
+<button class="w-full bg-primary text-white flex items-center justify-center gap-3 py-4 rounded-full font-label-bold active:scale-95 transition-transform shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined">send_time_extension</span>
+                Referans İste
+            </button>
+<div class="space-y-3">
+<h3 class="font-label-bold text-secondary uppercase tracking-widest text-[10px]">Mevcut Referanslar</h3>
+<!-- Pending Reference -->
+<div class="flex items-center justify-between p-4 rounded-xl border border-outline-variant/20 bg-surface-container-low/50">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-outline">person</span>
+</div>
+<div>
+<p class="font-label-bold text-on-surface">Aslı Yılmaz</p>
+<p class="text-[10px] text-secondary">CTO @ Innovate</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container text-[10px] font-bold">Beklemede</span>
+<span class="text-[10px] text-outline">2 gün önce</span>
+</div>
+</div>
+<!-- Confirmed Reference -->
+<div class="flex items-center justify-between p-4 rounded-xl border border-primary/10 bg-primary-container/5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden">
+<img alt="Ece Karahan" class="w-full h-full object-cover" data-alt="A close-up portrait of a professional female executive with a friendly and intelligent expression. She has sleek hair and is wearing a minimalist cream-colored silk blouse. The background is a softly lit, high-end office interior with glass walls and warm ambient lighting, creating an atmosphere of trust and high-level professional validation." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSUKtL7E2sF3amTzL3G2ydpP9VyJ0YXeuj22v5YoM-wqStFH5UWmvR9p-atGjLj_IpkDysCuv0bjhfhHwT87AmwswKTVmYtwMo_2HJsjmzamhs4BiN0gEui8j7Py14RS4GzGvqUNY2jd0F2FeojhawQZQsN8Pqpkuwr9rbAJuNKcaYwOV8U1WKvdtzHojz3smbIPRp5-GYex2KSsVUDfuewnaU-g8eqsXik7TQpiKUeufQdghYBuQvIrHhnnOIKfNBwY1x3s6kgoY"/>
+</div>
+<div>
+<p class="font-label-bold text-on-surface">Ece Karahan</p>
+<p class="text-[10px] text-secondary">Design Director @ StudioX</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="px-2 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold">Onaylandı</span>
+<span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar Shell -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-2 pb-safe h-16 bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg border-t border-slate-200 dark:border-slate-800 shadow-[0_-1px_3px_0_rgba(0,0,0,0.05)]">
+<button class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-blue-500 transition-all tap-highlight-transparent active:scale-90">
+<span class="material-symbols-outlined" data-icon="explore">explore</span>
+<span class="text-[10px] font-medium font-inter">Keşfet</span>
+</button>
+<button class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-blue-500 transition-all tap-highlight-transparent active:scale-90">
+<span class="material-symbols-outlined" data-icon="query_stats">query_stats</span>
+<span class="text-[10px] font-medium font-inter">Merit Lab</span>
+</button>
+<button class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-blue-500 transition-all tap-highlight-transparent active:scale-90">
+<span class="material-symbols-outlined" data-icon="assignment">assignment</span>
+<span class="text-[10px] font-medium font-inter">Görevler</span>
+</button>
+<button class="flex flex-col items-center justify-center text-blue-600 dark:text-blue-400 bg-blue-50/50 dark:bg-blue-900/20 rounded-xl px-3 py-1 tap-highlight-transparent active:scale-90">
+<span class="material-symbols-outlined" data-icon="person" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="text-[10px] font-medium font-inter">Profil</span>
+</button>
+</nav>
+</body></html>

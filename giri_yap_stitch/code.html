@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-fixed-variant": "#39475f",
+                    "on-error": "#ffffff",
+                    "secondary-fixed-dim": "#b9c7e4",
+                    "primary-container": "#0052ff",
+                    "surface-variant": "#e0e3e5",
+                    "secondary-container": "#d2e0fe",
+                    "outline": "#737688",
+                    "background": "#f7f9fb",
+                    "inverse-surface": "#2d3133",
+                    "surface": "#f7f9fb",
+                    "error": "#ba1a1a",
+                    "outline-variant": "#c3c5d9",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary": "#515f78",
+                    "on-tertiary-fixed": "#002019",
+                    "on-surface-variant": "#434656",
+                    "surface-container-highest": "#e0e3e5",
+                    "on-primary": "#ffffff",
+                    "inverse-on-surface": "#eff1f3",
+                    "surface-container-high": "#e6e8ea",
+                    "error-container": "#ffdad6",
+                    "surface-dim": "#d8dadc",
+                    "surface-tint": "#004ced",
+                    "tertiary-container": "#00745f",
+                    "on-secondary-container": "#55637d",
+                    "on-tertiary-container": "#62fed9",
+                    "tertiary": "#005949",
+                    "primary-fixed": "#dde1ff",
+                    "on-primary-fixed": "#001452",
+                    "secondary-fixed": "#d6e3ff",
+                    "on-secondary": "#ffffff",
+                    "surface-bright": "#f7f9fb",
+                    "on-secondary-fixed": "#0d1c32",
+                    "inverse-primary": "#b7c4ff",
+                    "primary-fixed-dim": "#b7c4ff",
+                    "on-background": "#191c1e",
+                    "on-primary-fixed-variant": "#0038b6",
+                    "on-tertiary-fixed-variant": "#005142",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-fixed-dim": "#38debb",
+                    "primary": "#003ec7",
+                    "surface-container": "#eceef0",
+                    "tertiary-fixed": "#5ffbd6",
+                    "on-primary-container": "#dfe3ff",
+                    "surface-container-low": "#f2f4f6",
+                    "on-surface": "#191c1e",
+                    "on-error-container": "#93000a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "xl": "80px",
+                    "margin-desktop": "40px",
+                    "md": "24px",
+                    "xs": "4px",
+                    "lg": "48px",
+                    "gutter": "24px",
+                    "base": "8px",
+                    "margin-mobile": "16px",
+                    "sm": "12px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Inter"],
+                    "label-bold": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "display-xl": ["Inter"],
+                    "numeric-data": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "label-bold": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "display-xl": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "numeric-data": ["14px", {"lineHeight": "1.0", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .tech-pattern {
+            background-color: #f7f9fb;
+            background-image: radial-gradient(#003ec7 0.5px, transparent 0.5px), radial-gradient(#003ec7 0.5px, #f7f9fb 0.5px);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            opacity: 0.03;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface font-body-md text-on-surface min-h-screen flex flex-col items-center justify-center overflow-hidden">
+<!-- Subtle Tech Background Overlay -->
+<div class="fixed inset-0 tech-pattern pointer-events-none"></div>
+<!-- Decorative Soft Gradients -->
+<div class="fixed top-[-10%] right-[-10%] w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] pointer-events-none"></div>
+<div class="fixed bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-secondary-container/20 rounded-full blur-[80px] pointer-events-none"></div>
+<main class="relative z-10 w-full max-w-md px-margin-mobile flex flex-col items-center">
+<!-- Logo Section -->
+<header class="mb-lg text-center">
+<div class="flex items-center justify-center mb-base">
+<div class="w-32 h-auto mb-xs"><img alt="intalent logo" class="w-full h-auto object-contain" src="https://lh3.googleusercontent.com/aida/ADBb0ui6KVrYrRA7U3VTA5a-FEciPyigrd2NoJpc8hnw5Bcs1mWiiosaWDEhUq86TfR0qA7C434myFIK1u6baB-es8yI9TqQs-d3jepof49qNDAirjRYC1L1c69z9KxYtwtGObwm_QrEQC5iozsBrflGl-0Mcdz89grGB0-A-sUDcJ0JqYV2mU5HnhvrhTSuhkV80JUCDqpyWva3Nr7XoSpKLsJXCuaV3CfFRp0rPwOIyQUDdAwjYzax9hHSkhUkvJXQoNy73V8o4rY2"/></div>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-background tracking-tighter lowercase">intalent</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-xs">Geleceğin Yetenek Laboratuvarı</p>
+</header>
+<!-- Login Card -->
+<section class="w-full glass-card p-md rounded-full shadow-sm">
+<div class="text-center mb-md">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-xs">Hoş Geldiniz</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Lütfen profesyonel hesabınızla giriş yapın.</p>
+</div>
+<!-- Primary Action: LinkedIn Button -->
+<button class="w-full flex items-center justify-center gap-sm bg-primary py-sm px-md rounded-xl text-on-primary hover:bg-primary-container transition-all active:scale-[0.98] shadow-md shadow-primary/10 mb-md">
+<svg class="w-5 h-5 fill-current" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"></path>
+</svg>
+<span class="font-label-bold text-label-bold">LinkedIn ile Bağlan</span>
+</button>
+<!-- Secondary Divider -->
+<div class="flex items-center gap-base mb-md">
+<div class="h-[1px] flex-1 bg-outline-variant"></div>
+<span class="font-label-bold text-label-bold text-outline uppercase">veya</span>
+<div class="h-[1px] flex-1 bg-outline-variant"></div>
+</div>
+<!-- Email (Placeholder/Optional look) -->
+<div class="space-y-sm mb-lg">
+<div class="flex flex-col gap-md">
+<div class="relative">
+<label class="block text-label-bold text-on-surface-variant mb-xs ml-1" for="email-input">E-posta ile devam edin</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-md py-sm font-body-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-outline/50" id="email-input" placeholder="E-posta adresiniz" type="email"/><div class="relative mt-md">
+<label class="block text-label-bold text-on-surface-variant mb-xs ml-1" for="password-input">Şifre</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-md py-sm font-body-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-outline/50" id="password-input" placeholder="Şifreniz" type="password"/>
+</div>
+</div>
+<button class="w-full py-sm px-md bg-secondary text-on-secondary rounded-xl font-label-bold text-label-bold hover:bg-on-secondary-fixed-variant transition-all active:scale-[0.98] shadow-sm">
+                    Devam Et
+                </button>
+</div>
+</div>
+<!-- Consent Section -->
+<div class="flex items-start gap-sm">
+<div class="relative flex items-center pt-xs">
+<input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary transition-all cursor-pointer" id="kvkk-consent" type="checkbox"/>
+</div>
+<label class="font-body-sm text-body-sm text-on-surface-variant leading-tight cursor-pointer" for="kvkk-consent">
+                    Kullanım koşullarını ve <a class="text-primary font-medium hover:underline" href="#">KVKK onayı</a> metnini okudum, kabul ediyorum.
+                </label>
+</div>
+</section>
+<!-- Footer Visual/Info -->
+<footer class="mt-lg w-full">
+<div class="flex flex-wrap justify-center gap-md mb-md">
+<div class="flex items-center gap-xs text-outline">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+<span class="font-label-bold text-[10px] tracking-widest uppercase">Güvenli Altyapı</span>
+</div>
+<div class="flex items-center gap-xs text-outline">
+<span class="material-symbols-outlined text-[18px]">analytics</span>
+<span class="font-label-bold text-[10px] tracking-widest uppercase">Veri Odaklı</span>
+</div>
+</div>
+</footer>
+</main>
+<!-- Bottom Navigation Shell Suppression (As per Rule: suppress on Login) -->
+<!-- This screen represents a focused journey; nav shell is excluded -->
+</body></html>

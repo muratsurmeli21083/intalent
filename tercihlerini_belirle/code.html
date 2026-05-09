@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Stitch Onboarding - Target Selection</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed-variant": "#39475f",
+                        "on-error": "#ffffff",
+                        "secondary-fixed-dim": "#b9c7e4",
+                        "primary-container": "#0052ff",
+                        "surface-variant": "#e0e3e5",
+                        "secondary-container": "#d2e0fe",
+                        "outline": "#737688",
+                        "background": "#f7f9fb",
+                        "inverse-surface": "#2d3133",
+                        "surface": "#f7f9fb",
+                        "error": "#ba1a1a",
+                        "outline-variant": "#c3c5d9",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary": "#515f78",
+                        "on-tertiary-fixed": "#002019",
+                        "on-surface-variant": "#434656",
+                        "surface-container-highest": "#e0e3e5",
+                        "on-primary": "#ffffff",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface-container-high": "#e6e8ea",
+                        "error-container": "#ffdad6",
+                        "surface-dim": "#d8dadc",
+                        "surface-tint": "#004ced",
+                        "tertiary-container": "#00745f",
+                        "on-secondary-container": "#55637d",
+                        "on-tertiary-container": "#62fed9",
+                        "tertiary": "#005949",
+                        "primary-fixed": "#dde1ff",
+                        "on-primary-fixed": "#001452",
+                        "secondary-fixed": "#d6e3ff",
+                        "on-secondary": "#ffffff",
+                        "surface-bright": "#f7f9fb",
+                        "on-secondary-fixed": "#0d1c32",
+                        "inverse-primary": "#b7c4ff",
+                        "primary-fixed-dim": "#b7c4ff",
+                        "on-background": "#191c1e",
+                        "on-primary-fixed-variant": "#0038b6",
+                        "on-tertiary-fixed-variant": "#005142",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed-dim": "#38debb",
+                        "primary": "#003ec7",
+                        "surface-container": "#eceef0",
+                        "tertiary-fixed": "#5ffbd6",
+                        "on-primary-container": "#dfe3ff",
+                        "surface-container-low": "#f2f4f6",
+                        "on-surface": "#191c1e",
+                        "on-error-container": "#93000a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "xl": "80px",
+                        "margin-desktop": "40px",
+                        "md": "24px",
+                        "xs": "4px",
+                        "lg": "48px",
+                        "gutter": "24px",
+                        "base": "8px",
+                        "margin-mobile": "16px",
+                        "sm": "12px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "label-bold": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "display-xl": ["Inter"],
+                        "numeric-data": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "label-bold": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "display-xl": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "numeric-data": ["14px", {"lineHeight": "1.0", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+        }
+        .chip-active {
+            background-color: #003ec7;
+            color: #ffffff;
+            border-color: #003ec7;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface font-body-md text-on-surface">
+<!-- Top Navigation Suppression: Onboarding is Transactional -->
+<header class="fixed top-0 w-full z-50 flex items-center justify-between px-4 h-16 bg-white/80 backdrop-blur-md border-b border-slate-200">
+<div class="flex items-center gap-2"><img alt="intalent logo" class="h-8 w-auto" src="https://lh3.googleusercontent.com/aida/ADBb0ui6KVrYrRA7U3VTA5a-FEciPyigrd2NoJpc8hnw5Bcs1mWiiosaWDEhUq86TfR0qA7C434myFIK1u6baB-es8yI9TqQs-d3jepof49qNDAirjRYC1L1c69z9KxYtwtGObwm_QrEQC5iozsBrflGl-0Mcdz89grGB0-A-sUDcJ0JqYV2mU5HnhvrhTSuhkV80JUCDqpyWva3Nr7XoSpKLsJXCuaV3CfFRp0rPwOIyQUDdAwjYzax9hHSkhUkvJXQoNy73V8o4rY2"/></div>
+<div class="flex items-center gap-sm">
+<span class="font-label-bold text-label-bold text-primary px-3 py-1 bg-primary-fixed rounded-full">ADIM 2/4</span>
+</div>
+</header>
+<main class="min-h-screen pt-24 pb-32 px-margin-mobile md:px-margin-desktop flex flex-col items-center">
+<div class="max-w-3xl w-full space-y-lg">
+<!-- Welcome Header -->
+<div class="space-y-xs">
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Kariyer Hedeflerini Belirleyelim</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Senin için en uygun fırsatları "Merit Lab" algoritmalarımızla eşleştireceğiz.</p>
+</div>
+<!-- Bento Grid Questions -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Question 1: Sectors -->
+<div class="md:col-span-12 glass-card rounded-xl p-md shadow-sm">
+<div class="flex items-center gap-sm mb-md">
+<div class="p-2 bg-primary-container rounded-lg text-on-primary">
+<span class="material-symbols-outlined" data-icon="domain">domain</span>
+</div>
+<h2 class="font-headline-md text-headline-md">Hangi sektörlerde kariyer yapmak istersin?</h2>
+</div>
+<div class="flex flex-wrap gap-sm">
+<button class="flex items-center gap-2 px-4 py-2 rounded-full border border-outline-variant hover:border-primary hover:bg-primary-fixed transition-all active:scale-95">
+<span class="material-symbols-outlined text-sm" data-icon="account_balance">account_balance</span>
+<span class="font-body-sm text-body-sm">Finance</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-full chip-active transition-all active:scale-95 shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-sm" data-icon="shopping_bag" style="font-variation-settings: 'FILL' 1;">shopping_bag</span>
+<span class="font-body-sm text-body-sm">Retail</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-full border border-outline-variant hover:border-primary hover:bg-primary-fixed transition-all active:scale-95">
+<span class="material-symbols-outlined text-sm" data-icon="computer">computer</span>
+<span class="font-body-sm text-body-sm">IT &amp; Tech</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-full border border-outline-variant hover:border-primary hover:bg-primary-fixed transition-all active:scale-95">
+<span class="material-symbols-outlined text-sm" data-icon="health_and_safety">health_and_safety</span>
+<span class="font-body-sm text-body-sm">Health Care</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-full chip-active transition-all active:scale-95 shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-sm" data-icon="factory" style="font-variation-settings: 'FILL' 1;">factory</span>
+<span class="font-body-sm text-body-sm">Manufacturing</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-full border border-outline-variant hover:border-primary hover:bg-primary-fixed transition-all active:scale-95">
+<span class="material-symbols-outlined text-sm" data-icon="movie">movie</span>
+<span class="font-body-sm text-body-sm">Entertainment</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-full border border-outline-variant hover:border-primary hover:bg-primary-fixed transition-all active:scale-95">
+<span class="material-symbols-outlined text-sm" data-icon="more_horiz">more_horiz</span>
+<span class="font-body-sm text-body-sm">Diğer</span>
+</button>
+</div>
+</div><div class="md:col-span-12 glass-card rounded-xl p-md shadow-sm">
+<div class="flex items-center gap-sm mb-md">
+<div class="p-2 bg-secondary-container rounded-lg text-on-secondary-container">
+<span class="material-symbols-outlined" data-icon="work">work</span>
+</div>
+<h2 class="font-headline-md text-headline-md">Mesleğiniz nedir?</h2>
+</div>
+<div class="flex flex-wrap gap-sm">
+<button class="flex items-center gap-2 px-4 py-2 rounded-full border border-outline-variant hover:border-primary hover:bg-primary-fixed transition-all active:scale-95">
+<span class="material-symbols-outlined text-sm" data-icon="school">school</span>
+<span class="font-body-sm text-body-sm">Öğretmen</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-full border border-outline-variant hover:border-primary hover:bg-primary-fixed transition-all active:scale-95">
+<span class="material-symbols-outlined text-sm" data-icon="gavel">gavel</span>
+<span class="font-body-sm text-body-sm">Avukat</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-full border border-outline-variant hover:border-primary hover:bg-primary-fixed transition-all active:scale-95">
+<span class="material-symbols-outlined text-sm" data-icon="terminal">terminal</span>
+<span class="font-body-sm text-body-sm">Bilgisayar Mühendisi</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-full border border-outline-variant hover:border-primary hover:bg-primary-fixed transition-all active:scale-95">
+<span class="material-symbols-outlined text-sm" data-icon="architecture">architecture</span>
+<span class="font-body-sm text-body-sm">Mimar</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-full border border-outline-variant hover:border-primary hover:bg-primary-fixed transition-all active:scale-95">
+<span class="material-symbols-outlined text-sm" data-icon="medical_services">medical_services</span>
+<span class="font-body-sm text-body-sm">Doktor</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-full border border-outline-variant hover:border-primary hover:bg-primary-fixed transition-all active:scale-95">
+<span class="material-symbols-outlined text-sm" data-icon="more_horiz">more_horiz</span>
+<span class="font-body-sm text-body-sm">Diğer</span>
+</button>
+</div>
+</div>
+<!-- Question 2: Roles -->
+<div class="md:col-span-12 glass-card rounded-xl p-md shadow-sm relative overflow-hidden">
+<div class="absolute top-0 right-0 p-lg opacity-5 pointer-events-none">
+<span class="material-symbols-outlined text-[120px]" data-icon="person_search">person_search</span>
+</div>
+<div class="flex items-center gap-sm mb-md">
+<div class="p-2 bg-tertiary-container rounded-lg text-on-tertiary">
+<span class="material-symbols-outlined" data-icon="badge">badge</span>
+</div>
+<h2 class="font-headline-md text-headline-md">Hedef rollerin neler?</h2>
+</div>
+<div class="space-y-md">
+<div class="relative">
+<span class="absolute inset-y-0 left-3 flex items-center text-outline">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</span>
+<input class="w-full pl-10 pr-4 py-3 rounded-xl border border-outline-variant focus:ring-2 focus:ring-primary focus:border-transparent outline-none bg-white transition-all" placeholder="Rol ara (örn: Backend Dev)" type="text"/>
+</div>
+<div class="flex flex-wrap gap-sm">
+<div class="flex items-center gap-2 px-4 py-2 rounded-xl bg-secondary-container text-on-secondary-container border border-secondary-fixed shadow-sm">
+<span class="font-body-sm text-body-sm font-medium">Backend Dev</span>
+<button class="hover:text-error transition-colors flex items-center">
+<span class="material-symbols-outlined text-sm" data-icon="close">close</span>
+</button>
+</div>
+<div class="flex items-center gap-2 px-4 py-2 rounded-xl bg-secondary-container text-on-secondary-container border border-secondary-fixed shadow-sm">
+<span class="font-body-sm text-body-sm font-medium">Analist</span>
+<button class="hover:text-error transition-colors flex items-center">
+<span class="material-symbols-outlined text-sm" data-icon="close">close</span>
+</button>
+</div>
+<div class="flex items-center gap-2 px-4 py-2 rounded-xl bg-secondary-container text-on-secondary-container border border-secondary-fixed shadow-sm">
+<span class="font-body-sm text-body-sm font-medium">Mağaza Müdürü</span>
+<button class="hover:text-error transition-colors flex items-center">
+<span class="material-symbols-outlined text-sm" data-icon="close">close</span>
+</button>
+</div>
+</div>
+<div class="pt-sm">
+<p class="font-label-bold text-label-bold text-outline mb-sm uppercase tracking-widest">Popüler Öneriler</p>
+<div class="flex flex-wrap gap-xs">
+<button class="px-3 py-1 rounded-full text-body-sm border border-outline-variant text-on-surface-variant hover:bg-surface-container-high transition-colors">UI/UX Designer</button>
+<button class="px-3 py-1 rounded-full text-body-sm border border-outline-variant text-on-surface-variant hover:bg-surface-container-high transition-colors">Data Scientist</button>
+<button class="px-3 py-1 rounded-full text-body-sm border border-outline-variant text-on-surface-variant hover:bg-surface-container-high transition-colors">Project Manager</button>
+<button class="px-3 py-1 rounded-full text-body-sm border border-outline-variant text-on-surface-variant hover:bg-surface-container-high transition-colors">Fullstack Engineer</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Merit Insight Widget -->
+<div class="md:col-span-12 bg-primary-container rounded-xl p-md text-on-primary flex flex-col md:flex-row items-center gap-md">
+<div class="h-24 w-24 flex-shrink-0 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+<span class="material-symbols-outlined text-4xl" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<div class="flex-1 space-y-xs text-center md:text-left">
+<h3 class="font-headline-md text-headline-md text-on-primary-container">Eşleşme Kalitesini Artır</h3>
+<p class="font-body-sm text-body-sm opacity-90">Sektör ve rol seçimlerin, algoritmanızın size en uygun 'Merit Lab' puanına sahip şirketleri getirmesini sağlar. Ne kadar spesifik olursan o kadar iyi!</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Action Bar (Transactional Floating State) -->
+<footer class="fixed bottom-0 w-full bg-white/90 backdrop-blur-lg border-t border-slate-200 px-margin-mobile py-4 flex items-center justify-between z-50">
+<button class="flex items-center gap-2 font-label-bold text-label-bold text-secondary hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+            Geri Dön
+        </button>
+<div class="flex items-center gap-md">
+<div class="hidden md:flex flex-col items-end">
+<span class="font-numeric-data text-numeric-data text-outline">Kalan Adımlar</span>
+<div class="flex gap-1">
+<div class="h-1.5 w-6 rounded-full bg-primary"></div>
+<div class="h-1.5 w-6 rounded-full bg-primary"></div>
+<div class="h-1.5 w-6 rounded-full bg-slate-200"></div>
+<div class="h-1.5 w-6 rounded-full bg-slate-200"></div>
+</div>
+</div>
+<button class="px-lg py-3 bg-primary text-on-primary rounded-full font-headline-md text-body-md hover:bg-primary-container transition-all active:scale-95 shadow-lg shadow-primary/25">
+                Devam Et
+            </button>
+</div>
+</footer>
+<!-- Suppressed Shell Components (BottomNavBar / NavigationDrawer) as per 'Destination' Rule for transactional flows -->
+</body></html>
