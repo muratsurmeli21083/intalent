@@ -160,11 +160,11 @@ class _HrDashboardScreenState extends State<HrDashboardScreen> {
           ),
           const Spacer(),
           ElevatedButton.icon(
-            onPressed: _isUploading ? null : _pickAndUploadExcel,
+            onPressed: () => context.push('/job-wizard'),
             icon: _isUploading 
                 ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                 : const Icon(Icons.add_rounded),
-            label: const Text('Yeni Soru Yükle'),
+            label: const Text('Yeni İlan Yayınla'),
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF003EC7),
               foregroundColor: Colors.white,
