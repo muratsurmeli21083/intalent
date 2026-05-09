@@ -34,9 +34,9 @@ class DatabaseService {
   }
 
   // --- Question Operations ---
-  Future<List<QuestionModel>> getQuestions() async {
+  Future<List<JobModel>> getAllQuestions() async {
     final response = await client.from('questions').select();
-    return (response as List).map((json) => QuestionModel.fromJson(json)).toList();
+    return (response as List).map((json) => JobModel.fromJson(json)).toList();
   }
 
   Future<void> insert(String table, Map<String, dynamic> data) async {
@@ -53,19 +53,20 @@ class DatabaseService {
     await client.from('scores').insert(score.toJson());
   }
 
-  // --- Count Helpers (Updated for Latest Supabase Version) ---
+  // --- Count Helpers (The ONLY safe way for multiple Supabase versions) ---
   Future<int> getCandidateCount() async {
-    // Note: In latest supabase_flutter, use select with count parameter
     final response = await client
         .from('profiles')
-        .select('*', const FetchOptions(count: CountOption.exact));
+        .select('*')
+        .count(CountOption.exact);
     return response.count ?? 0;
   }
 
   Future<int> getJobCount() async {
     final response = await client
         .from('jobs')
-        .select('*', const FetchOptions(count: CountOption.exact));
+        .select('*')
+        .count(CountOption.exact);
     return response.count ?? 0;
   }
 }
