@@ -45,15 +45,40 @@ class ProfileScreen extends StatelessWidget {
                           child: Icon(Icons.person, size: 50, color: Color(0xFFCCCCCC)),
                         ),
                       ),
-                      Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
+                      // Verified Badge
+                      Positioned(
+                        right: 0,
+                        bottom: 0,
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(Icons.verified, color: Color(0xFF003EC7), size: 24),
                         ),
-                        child: const Icon(Icons.verified, color: Color(0xFF003EC7), size: 24),
+                      ),
+                      // Edit Image Button
+                      Positioned(
+                        left: 0,
+                        bottom: 0,
+                        child: GestureDetector(
+                          onTap: () {
+                            // Image picker logic here
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF003EC7),
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.white, width: 2),
+                            ),
+                            child: const Icon(Icons.camera_alt, color: Colors.white, size: 14),
+                          ),
+                        ),
                       ),
                     ],
+
                   ),
                   const SizedBox(height: 16),
                   const Text(
@@ -88,9 +113,9 @@ class ProfileScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
 
-            // Experience Timeline
+            // Career Section
             _buildSection(
-              'Deneyim Kronolojisi',
+              'Kariyer',
               Column(
                 children: [
                   _buildTimelineItem(
@@ -188,12 +213,14 @@ class ProfileScreen extends StatelessWidget {
                     'Ahmet Yılmaz',
                     'Design Director @ Spotify',
                     'Deniz ile çalışmak büyük bir keyifti. Vizyoner ve teknik becerisi yüksek bir tasarımcı.',
+                    true,
                   ),
                   const Divider(height: 24),
                   _buildReferenceItem(
                     'Sarah Connor',
                     'Lead Developer @ Airbnb',
                     'Harika bir takım oyuncusu. Tasarımları her zaman geliştirilebilir ve kullanıcı odaklı.',
+                    false,
                   ),
                 ],
               ),
@@ -220,17 +247,70 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildReferenceItem(String name, String title, String quote) {
+  Widget _buildReferenceItem(String name, String title, String quote, bool isVerified) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-        Text(title, style: const TextStyle(color: Color(0xFF003EC7), fontSize: 12, fontWeight: FontWeight.w500)),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                      const SizedBox(width: 8),
+                      if (isVerified)
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: Colors.green.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: const Row(
+                            children: [
+                              Icon(Icons.check_circle, size: 10, color: Colors.green),
+                              SizedBox(width: 4),
+                              Text('Onaylandı', style: TextStyle(color: Colors.green, fontSize: 10, fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                        ),
+                    ],
+                  ),
+                  Text(title, style: const TextStyle(color: Color(0xFF003EC7), fontSize: 12, fontWeight: FontWeight.w500)),
+                ],
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.edit_outlined, size: 16, color: Color(0xFFCCCCCC)),
+              onPressed: () {},
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+            ),
+          ],
+        ),
         const SizedBox(height: 8),
         Text(
           '"$quote"',
           style: const TextStyle(color: Color(0xFF666666), fontSize: 13, fontStyle: FontStyle.italic),
         ),
+        const SizedBox(height: 12),
+        if (!isVerified)
+          OutlinedButton(
+            onPressed: () {},
+            style: OutlinedButton.styleFrom(
+              side: const BorderSide(color: Color(0xFF003EC7)),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+              minimumSize: const Size(0, 30),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+            ),
+            child: const Text(
+              'ONAY İSTE',
+              style: TextStyle(color: Color(0xFF003EC7), fontSize: 11, fontWeight: FontWeight.bold),
+            ),
+          ),
       ],
     );
   }
@@ -257,7 +337,14 @@ class ProfileScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-              const Icon(Icons.edit_outlined, size: 18, color: Color(0xFF666666)),
+              Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF003EC7).withOpacity(0.05),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.add, size: 18, color: Color(0xFF003EC7)),
+              ),
             ],
           ),
           const SizedBox(height: 16),
@@ -284,7 +371,7 @@ class ProfileScreen extends StatelessWidget {
             ),
             Container(
               width: 2,
-              height: 70,
+              height: 85,
               color: const Color(0xFFEEEEEE),
             ),
           ],
@@ -294,7 +381,15 @@ class ProfileScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                  ),
+                  const Icon(Icons.edit_outlined, size: 16, color: Color(0xFFCCCCCC)),
+                ],
+              ),
               Text(company, style: const TextStyle(color: Color(0xFF003EC7), fontSize: 13, fontWeight: FontWeight.w500)),
               Text(date, style: const TextStyle(color: Color(0xFF666666), fontSize: 12)),
               const SizedBox(height: 8),
@@ -323,7 +418,15 @@ class ProfileScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                  ),
+                  const Icon(Icons.edit_outlined, size: 16, color: Color(0xFFCCCCCC)),
+                ],
+              ),
               Text(subtitle, style: const TextStyle(color: Color(0xFF666666), fontSize: 13)),
               Text(date, style: const TextStyle(color: Color(0xFF999999), fontSize: 12)),
             ],
@@ -332,6 +435,7 @@ class ProfileScreen extends StatelessWidget {
       ],
     );
   }
+
 
   Widget _buildSkillChip(String skill, String count) {
     return Container(
