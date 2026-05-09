@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:excel/excel.dart';
 import '../services/database_service.dart';
 import '../models/app_models.dart';
 
@@ -12,6 +14,57 @@ class HrDashboardScreen extends StatefulWidget {
 class _HrDashboardScreenState extends State<HrDashboardScreen> {
   final DatabaseService _dbService = DatabaseService();
   int _selectedIndex = 0;
+  bool _isUploading = false;
+
+  Future<void> _pickAndUploadExcel() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['xlsx'],
+      withData: true,
+    );
+
+    if (result != null) {
+      setState(() => _isUploading = true);
+      try {
+        var bytes = result.files.first.bytes!;
+        var excel = Excel.decodeBytes(bytes);
+        
+        for (var table in excel.tables.keys) {
+          var sheet = excel.tables[table]!;
+          for (int i = 1; i < sheet.maxRows; i++) {
+            var row = sheet.rows[i];
+            if (row.length < 7) continue;
+
+            final category = row[0]?.value.toString() ?? '';
+            final content = row[1]?.value.toString() ?? '';
+            final options = {
+              'A': row[2]?.value.toString() ?? '',
+              'B': row[3]?.value.toString() ?? '',
+              'C': row[4]?.value.toString() ?? '',
+              'D': row[5]?.value.toString() ?? '',
+            };
+            final correct = row[6]?.value.toString() ?? '';
+
+            await _dbService.insert('questions', {
+              'category': category,
+              'content': content,
+              'options': options,
+              'correct_answer': correct,
+            });
+          }
+        }
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Sorular başarıyla yüklendi!')));
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Hata: $e')));
+        }
+      } finally {
+        setState(() => _isUploading = false);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,6 +166,19 @@ class _HrDashboardScreenState extends State<HrDashboardScreen> {
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
           const Spacer(),
+          ElevatedButton.icon(
+            onPressed: _isUploading ? null : _pickAndUploadExcel,
+            icon: _isUploading 
+                ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                : const Icon(Icons.upload_file),
+            label: Text(_isUploading ? 'Yükleniyor...' : 'Soru Yükle (Excel)'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF003EC7),
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            ),
+          ),
+          const SizedBox(width: 24),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(color: const Color(0xFFF1F3F9), borderRadius: BorderRadius.circular(10)),

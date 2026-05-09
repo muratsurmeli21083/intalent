@@ -39,6 +39,16 @@ class DatabaseService {
     await _client.from('scores').insert(score.toJson());
   }
 
+  // --- Question Bank Operations ---
+  Future<void> insert(String table, Map<String, dynamic> data) async {
+    await _client.from(table).insert(data);
+  }
+
+  Future<List<QuestionModel>> getQuestions() async {
+    final response = await _client.from('questions').select();
+    return response.map<QuestionModel>((json) => QuestionModel.fromJson(json)).toList();
+  }
+
   // --- Helpers ---
   User? get currentUser => _client.auth.currentUser;
 }

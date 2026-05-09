@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import '../services/database_service.dart';
+import '../models/app_models.dart';
 
 class ExamScreen extends StatefulWidget {
   final String title;
@@ -11,41 +13,48 @@ class ExamScreen extends StatefulWidget {
 }
 
 class _ExamScreenState extends State<ExamScreen> {
+  final DatabaseService _dbService = DatabaseService();
   int _currentQuestionIndex = 0;
-  int _timeLeft = 300; // 5 minutes in seconds
+  int _timeLeft = 360; // 6 minutes in seconds
   Timer? _timer;
-  int? _selectedOption;
-
-  final List<Map<String, dynamic>> _questions = [
-    {
-      'question': 'Aşağıdaki sayı dizisinde soru işareti yerine hangi sayı gelmelidir?\n2, 6, 12, 20, 30, ?',
-      'options': ['36', '40', '42', '48'],
-      'correctIndex': 2,
-    },
-    {
-      'question': 'Bir mağaza tüm ürünlerde %20 indirim yapmaktadır. 200 TL\'lik bir ürünün indirimli fiyatı nedir?',
-      'options': ['150 TL', '160 TL', '170 TL', '180 TL'],
-      'correctIndex': 1,
-    },
-    {
-      'question': 'Hangi kelime "Zıt" anlamlıdır?\nSiyah - ?',
-      'options': ['Koyu', 'Gece', 'Beyaz', 'Gri'],
-      'correctIndex': 2,
-    },
-  ];
+  String? _selectedOptionKey;
+  List<QuestionModel> _dynamicQuestions = [];
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _startTimer();
+    _loadQuestions();
+  }
+
+  Future<void> _loadQuestions() async {
+    try {
+      // Fetch questions from Supabase (e.g., 25 random questions across categories)
+      final allQuestions = await _dbService.getQuestions();
+      
+      setState(() {
+        _dynamicQuestions = (allQuestions..shuffle()).take(25).toList();
+        _isLoading = false;
+      });
+      
+      _startTimer();
+    } catch (e) {
+      debugPrint('Error loading questions: $e');
+      if (mounted) {
+        setState(() => _isLoading = false);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Hata: $e')));
+      }
+    }
   }
 
   void _startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_timeLeft > 0) {
-        setState(() {
-          _timeLeft--;
-        });
+        if (mounted) {
+          setState(() {
+            _timeLeft--;
+          });
+        }
       } else {
         _finishExam();
       }
@@ -59,10 +68,10 @@ class _ExamScreenState extends State<ExamScreen> {
   }
 
   void _nextQuestion() {
-    if (_currentQuestionIndex < _questions.length - 1) {
+    if (_currentQuestionIndex < _dynamicQuestions.length - 1) {
       setState(() {
         _currentQuestionIndex++;
-        _selectedOption = null;
+        _selectedOptionKey = null;
       });
     } else {
       _finishExam();
@@ -87,12 +96,23 @@ class _ExamScreenState extends State<ExamScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final question = _questions[_currentQuestionIndex];
+    if (_isLoading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    if (_dynamicQuestions.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(title: Text(widget.title)),
+        body: const Center(child: Text('Henüz soru yüklenmemiş.')),
+      );
+    }
+
+    final question = _dynamicQuestions[_currentQuestionIndex];
 
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(widget.title, style: const TextStyle(fontSize: 16)),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 0,
@@ -133,39 +153,47 @@ class _ExamScreenState extends State<ExamScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Progress Bar
             LinearProgressIndicator(
-              value: (_currentQuestionIndex + 1) / _questions.length,
+              value: (_currentQuestionIndex + 1) / _dynamicQuestions.length,
               backgroundColor: const Color(0xFFEEEEEE),
               valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF003EC7)),
             ),
             const SizedBox(height: 32),
-            Text(
-              'Soru ${_currentQuestionIndex + 1}/${_questions.length}',
-              style: const TextStyle(color: Color(0xFF666666), fontWeight: FontWeight.w500),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Soru ${_currentQuestionIndex + 1}/${_dynamicQuestions.length}',
+                  style: const TextStyle(color: Color(0xFF666666), fontWeight: FontWeight.w500),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(4)),
+                  child: Text(question.category, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+                ),
+              ],
             ),
             const SizedBox(height: 12),
             Text(
-              question['question'],
+              question.content,
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, height: 1.4),
             ),
             const SizedBox(height: 32),
-            ...List.generate(
-              question['options'].length,
-              (index) => _buildOption(index, question['options'][index]),
-            ),
+            ...question.options.entries.map(
+              (entry) => _buildOption(entry.key, entry.value.toString()),
+            ).toList(),
             const Spacer(),
             SizedBox(
               width: double.infinity,
               height: 50,
               child: ElevatedButton(
-                onPressed: _selectedOption != null ? _nextQuestion : null,
+                onPressed: _selectedOptionKey != null ? _nextQuestion : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF003EC7),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
                 child: Text(
-                  _currentQuestionIndex == _questions.length - 1 ? 'Sınavı Bitir' : 'Sonraki Soru',
+                  _currentQuestionIndex == _dynamicQuestions.length - 1 ? 'Sınavı Bitir' : 'Sonraki Soru',
                   style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ),
@@ -175,6 +203,67 @@ class _ExamScreenState extends State<ExamScreen> {
       ),
     );
   }
+
+  Widget _buildOption(String key, String text) {
+    bool isSelected = _selectedOptionKey == key;
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedOptionKey = key;
+        });
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 16),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: isSelected ? const Color(0xFF003EC7).withOpacity(0.05) : Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isSelected ? const Color(0xFF003EC7) : const Color(0xFFEEEEEE),
+            width: isSelected ? 2 : 1,
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: isSelected ? const Color(0xFF003EC7) : const Color(0xFFCCCCCC),
+                  width: 2,
+                ),
+                color: isSelected ? const Color(0xFF003EC7) : Colors.transparent,
+              ),
+              child: Center(
+                child: Text(
+                  key,
+                  style: TextStyle(
+                    fontSize: 14, 
+                    fontWeight: FontWeight.bold,
+                    color: isSelected ? Colors.white : const Color(0xFFCCCCCC)
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                text,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                  color: isSelected ? const Color(0xFF003EC7) : Colors.black,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
   Widget _buildOption(int index, String text) {
     bool isSelected = _selectedOption == index;

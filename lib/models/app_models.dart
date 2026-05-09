@@ -103,3 +103,42 @@ class CompetencyScore {
     consistencyIndex: (json['consistency_index'] as num).toDouble(),
   );
 }
+
+class QuestionModel {
+  final String id;
+  final String? taskId;
+  final String category;
+  final String content;
+  final Map<String, dynamic> options;
+  final String correctAnswer;
+  final int points;
+
+  QuestionModel({
+    required this.id,
+    this.taskId,
+    required this.category,
+    required this.content,
+    required this.options,
+    required this.correctAnswer,
+    this.points = 1,
+  });
+
+  Map<String, dynamic> toJson() => {
+    'task_id': taskId,
+    'category': category,
+    'content': content,
+    'options': options,
+    'correct_answer': correctAnswer,
+    'points': points,
+  };
+
+  factory QuestionModel.fromJson(Map<String, dynamic> json) => QuestionModel(
+    id: json['id'],
+    taskId: json['task_id'],
+    category: json['category'],
+    content: json['content'],
+    options: json['options'],
+    correct_answer: json['correct_answer'],
+    points: json['points'] ?? 1,
+  );
+}

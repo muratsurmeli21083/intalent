@@ -35,12 +35,15 @@ CREATE TABLE IF NOT EXISTS public.jobs (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 4. Questions Table
+-- 4. Questions Table (Updated for Dynamic Bank)
 CREATE TABLE IF NOT EXISTS public.questions (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   task_id UUID REFERENCES public.tasks(id) ON DELETE CASCADE,
-  text TEXT NOT NULL,
-  competency_dimension TEXT, -- One of the 24 competencies
+  category TEXT NOT NULL, -- Sayısal, Sözel, Mantıksal, İngilizce
+  content TEXT NOT NULL,
+  options JSONB NOT NULL, -- {"A": "...", "B": "...", "C": "...", "D": "..."}
+  correct_answer TEXT NOT NULL,
+  points INTEGER DEFAULT 1,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
