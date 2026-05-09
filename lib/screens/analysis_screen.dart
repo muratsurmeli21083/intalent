@@ -225,10 +225,12 @@ class AnalysisScreen extends StatelessWidget {
   }
 
   void _navigateToExam(BuildContext context, String title) {
-    if (title == 'KİŞİLİK ENVANTERİ (OCEAN)') {
+    if (title == 'KİŞİLİK ENVANTERİ (OCEAN)' || title == 'MOTİVASYON ENVANTERİ') {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const KisilikEnvanteriScreen()),
+        MaterialPageRoute(
+          builder: (context) => KisilikEnvanteriScreen(title: title),
+        ),
       );
     } else {
       Navigator.push(

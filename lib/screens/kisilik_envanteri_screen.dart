@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class KisilikEnvanteriScreen extends StatefulWidget {
-  const KisilikEnvanteriScreen({super.key});
+  final String title;
+  const KisilikEnvanteriScreen({super.key, required this.title});
 
   @override
   State<KisilikEnvanteriScreen> createState() => _KisilikEnvanteriScreenState();
@@ -12,7 +13,6 @@ class _KisilikEnvanteriScreenState extends State<KisilikEnvanteriScreen> {
   final int _totalBlocks = 18;
   
   // State to store selections for the current block (4 questions)
-  // Maps question index (0-3) to its selected score (1-6)
   Map<int, int?> _currentSelections = {
     0: null,
     1: null,
@@ -20,7 +20,7 @@ class _KisilikEnvanteriScreenState extends State<KisilikEnvanteriScreen> {
     3: null,
   };
 
-  final List<List<String>> _blocks = [
+  final List<List<String>> _personalityBlocks = [
     [
       'Yeni stratejiler geliştirmeyi severim.',
       'Ekip içindeki çatışmaları yönetirim.',
@@ -33,25 +33,35 @@ class _KisilikEnvanteriScreenState extends State<KisilikEnvanteriScreen> {
       'Detaylara odaklanmak beni yormaz.',
       'Yaratıcı çözümler üretmekten keyif alırım.',
     ],
-    // Add more blocks as needed...
+  ];
+
+  final List<List<String>> _motivationBlocks = [
+    [
+      'Başarılarımın takdir edilmesi beni motive eder.',
+      'Bağımsız çalışabileceğim ortamları tercih ederim.',
+      'Sürekli yeni şeyler öğrenmek benim için kritiktir.',
+      'Finansal ödüller performansımı doğrudan artırır.',
+    ],
+    [
+      'Liderlik rolleri üstlenmekten heyecan duyarım.',
+      'İş güvencesi benim için en önemli faktördür.',
+      'Esnek çalışma saatleri verimliliğimi artırır.',
+      'Sosyal sorumluluk projelerinde yer almak isterim.',
+    ],
   ];
 
   void _onScoreSelected(int questionIndex, int score) {
     setState(() {
-      // If the score was already selected by another question in this block, clear it from that question
       _currentSelections.forEach((index, value) {
         if (value == score && index != questionIndex) {
           _currentSelections[index] = null;
         }
       });
-      
-      // Set the new score for the target question
       _currentSelections[questionIndex] = score;
     });
   }
 
   bool _isScoreUsed(int score, int currentQuestionIndex) {
-    // Check if this score is already taken by a DIFFERENT question in the same block
     bool used = false;
     _currentSelections.forEach((index, value) {
       if (index != currentQuestionIndex && value == score) {
@@ -82,16 +92,16 @@ class _KisilikEnvanteriScreenState extends State<KisilikEnvanteriScreen> {
       barrierDismissible: false,
       builder: (context) => AlertDialog(
         backgroundColor: const Color(0xFF0A192F),
-        title: const Text('Envanter Tamamlandı', style: TextStyle(color: Colors.white)),
-        content: const Text(
-          'Kişilik envanterini başarıyla tamamladınız. Analiz sonuçlarınız profilinize yansıtılacaktır.',
-          style: TextStyle(color: Colors.white70),
+        title: Text('${widget.title} Tamamlandı', style: const TextStyle(color: Colors.white)),
+        content: Text(
+          '${widget.title} başarıyla tamamladınız. Analiz sonuçlarınız profilinize yansıtılacaktır.',
+          style: const TextStyle(color: Colors.white70),
         ),
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.pop(context); // Close dialog
-              Navigator.pop(context); // Back to Analysis screen
+              Navigator.pop(context);
+              Navigator.pop(context);
             },
             child: const Text('TAMAM', style: TextStyle(color: Color(0xFF003EC7), fontWeight: FontWeight.bold)),
           ),
@@ -102,17 +112,18 @@ class _KisilikEnvanteriScreenState extends State<KisilikEnvanteriScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // For demo purposes, we recycle the first block if we exceed the defined blocks
-    final currentBlockQuestions = _blocks[_currentBlockIndex % _blocks.length];
+    final isMotivation = widget.title == 'MOTİVASYON ENVANTERİ';
+    final blocks = isMotivation ? _motivationBlocks : _personalityBlocks;
+    final currentBlockQuestions = blocks[_currentBlockIndex % blocks.length];
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0A192F), // Dark Mode Deep Navy
+      backgroundColor: const Color(0xFF0A192F),
       appBar: AppBar(
         backgroundColor: const Color(0xFF0A192F),
         elevation: 0,
-        title: const Text(
-          'Kişilik Envanteri',
-          style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+        title: Text(
+          widget.title,
+          style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
         ),
         leading: IconButton(
           icon: const Icon(Icons.close, color: Colors.white70),
