@@ -20,21 +20,7 @@ void main() async {
 }
 
 final _router = GoRouter(
-  initialLocation: '/',
-  redirect: (context, state) async {
-    final session = Supabase.instance.client.auth.currentSession;
-    final bool loggingIn = state.matchedLocation == '/';
-
-    if (session == null) return loggingIn ? null : '/';
-
-    // If logged in, check role for /recruiter access
-    if (state.matchedLocation.startsWith('/recruiter')) {
-      final profile = await DatabaseService().getProfile(session.user.id);
-      if (profile?.role != 'admin') return '/';
-    }
-
-    return null;
-  },
+  initialLocation: '/recruiter', // Doğrudan İK Panelinden başla
   routes: [
     GoRoute(
       path: '/',
