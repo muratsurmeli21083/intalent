@@ -9,6 +9,9 @@ class DatabaseService {
 
   final SupabaseClient client = Supabase.instance.client;
 
+  // --- Auth Helpers ---
+  User? get currentUser => client.auth.currentUser;
+
   // --- Profile Operations ---
   Future<UserProfile?> getProfile(String id) async {
     final response = await client.from('profiles').select().eq('id', id).single();
@@ -50,14 +53,19 @@ class DatabaseService {
     await client.from('scores').insert(score.toJson());
   }
 
-  // --- Count Helpers ---
+  // --- Count Helpers (Updated for Latest Supabase Version) ---
   Future<int> getCandidateCount() async {
-    final response = await client.from('profiles').select('id', const FetchOptions(count: CountOption.exact));
+    // Note: In latest supabase_flutter, use select with count parameter
+    final response = await client
+        .from('profiles')
+        .select('*', const FetchOptions(count: CountOption.exact));
     return response.count ?? 0;
   }
 
   Future<int> getJobCount() async {
-    final response = await client.from('jobs').select('id', const FetchOptions(count: CountOption.exact));
+    final response = await client
+        .from('jobs')
+        .select('*', const FetchOptions(count: CountOption.exact));
     return response.count ?? 0;
   }
 }
