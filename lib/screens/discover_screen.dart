@@ -9,8 +9,30 @@ class DiscoverScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFF3F2EF),
       appBar: AppBar(
-        title: const Text('Keşfet'),
+        title: Row(
+          children: [
+            const Text(
+              'intalent',
+              style: TextStyle(
+                color: Color(0xFF003EC7),
+                fontWeight: FontWeight.bold,
+                fontSize: 22,
+                letterSpacing: -0.5,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Container(
+              width: 4,
+              height: 4,
+              decoration: const BoxDecoration(
+                color: Color(0xFF003EC7),
+                shape: BoxShape.circle,
+              ),
+            ),
+          ],
+        ),
         backgroundColor: Colors.white,
+        elevation: 0,
         actions: [
           IconButton(
             icon: const Icon(Icons.search, color: Color(0xFF666666)),
@@ -34,9 +56,9 @@ class DiscoverScreen extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 children: [
-                  _buildOpportunityCard('Senior UX Designer', 'Spotify', 'Stockholm, SE', 'assets/spotify_logo.png', const Color(0xFF1DB954)),
-                  _buildOpportunityCard('Product Manager', 'Airbnb', 'Remote', 'assets/airbnb_logo.png', const Color(0xFFFF5A5F)),
-                  _buildOpportunityCard('Backend Engineer', 'Stripe', 'Dublin, IE', 'assets/stripe_logo.png', const Color(0xFF635BFF)),
+                  _buildOpportunityCard(context, 'Senior UX Designer', 'Spotify', 'Stockholm, SE', 'assets/spotify_logo.png', const Color(0xFF1DB954)),
+                  _buildOpportunityCard(context, 'Product Manager', 'Airbnb', 'Remote', 'assets/airbnb_logo.png', const Color(0xFFFF5A5F)),
+                  _buildOpportunityCard(context, 'Backend Engineer', 'Stripe', 'Dublin, IE', 'assets/stripe_logo.png', const Color(0xFF635BFF)),
                 ],
               ),
             ),
@@ -81,64 +103,78 @@ class DiscoverScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildOpportunityCard(String title, String company, String location, String logoPath, Color brandColor) {
-    return Container(
-      width: 260,
-      margin: const EdgeInsets.only(right: 16),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFEEEEEE)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.02),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+  Widget _buildOpportunityCard(BuildContext context, String title, String company, String location, String logoPath, Color brandColor) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => JobDetailScreen(
+              title: title,
+              company: company,
+              location: location,
+            ),
           ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: brandColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
+        );
+      },
+      child: Container(
+        width: 260,
+        margin: const EdgeInsets.only(right: 16),
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: const Color(0xFFEEEEEE)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.02),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: brandColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(Icons.business, color: brandColor), // Placeholder for logo
                 ),
-                child: Icon(Icons.business, color: brandColor), // Placeholder for logo
+                const Icon(Icons.bookmark_border, color: Color(0xFFCCCCCC)),
+              ],
+            ),
+            const Spacer(),
+            Text(
+              title,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              '$company • $location',
+              style: const TextStyle(color: Color(0xFF666666), fontSize: 13),
+            ),
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: const Color(0xFF003EC7).withOpacity(0.05),
+                borderRadius: BorderRadius.circular(4),
               ),
-              const Icon(Icons.bookmark_border, color: Color(0xFFCCCCCC)),
-            ],
-          ),
-          const Spacer(),
-          Text(
-            title,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            '$company • $location',
-            style: const TextStyle(color: Color(0xFF666666), fontSize: 13),
-          ),
-          const SizedBox(height: 12),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              color: const Color(0xFF003EC7).withOpacity(0.05),
-              borderRadius: BorderRadius.circular(4),
+              child: const Text(
+                'AI Analiz: Yüksek Uyum',
+                style: TextStyle(color: Color(0xFF003EC7), fontSize: 11, fontWeight: FontWeight.bold),
+              ),
             ),
-            child: const Text(
-              'AI Analiz: Yüksek Uyum',
-              style: TextStyle(color: Color(0xFF003EC7), fontSize: 11, fontWeight: FontWeight.bold),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

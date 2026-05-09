@@ -8,7 +8,7 @@ class ProfileScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFF3F2EF),
       appBar: AppBar(
-        title: const Text('Profil & Live CV'),
+        title: const Text('Profil'),
         backgroundColor: Colors.white,
         actions: [
           IconButton(
@@ -24,51 +24,6 @@ class ProfileScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // AI Analysis Banner
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16),
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Color(0xFF003EC7), Color(0xFF0052FF)],
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'LinkedIn Profilin intalent AI Tarafından İncelendi',
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      const Text(
-                        'Mevcut liyakat skorun ',
-                        style: TextStyle(color: Colors.white70, fontSize: 13),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: Colors.white24,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: const Text(
-                          '%65',
-                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'Skorunu %90 ve üzerine yükseltmek için 3 önerimiz var!',
-                    style: TextStyle(color: Colors.white, fontSize: 12),
-                  ),
-                ],
-              ),
-            ),
-
             // Profile Header Section
             Container(
               color: Colors.white,
@@ -121,8 +76,8 @@ class ProfileScreen extends StatelessWidget {
                   const SizedBox(height: 20),
                   ElevatedButton.icon(
                     onPressed: () {},
-                    icon: const Icon(Icons.description_outlined, size: 18),
-                    label: const Text('Live CV\'yi İndir'),
+                    icon: const Icon(Icons.cloud_upload_outlined, size: 18),
+                    label: const Text('CV Yükle/Güncelle'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF003EC7),
                       minimumSize: const Size(double.infinity, 45),
@@ -169,6 +124,29 @@ class ProfileScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
 
+            // Certificates Section
+            _buildSection(
+              'Sertifikalar',
+              Column(
+                children: [
+                  _buildSimpleItem(
+                    'Google UX Design Professional Certificate',
+                    'Coursera • Google',
+                    '2021',
+                    Icons.workspace_premium_outlined,
+                  ),
+                  const SizedBox(height: 12),
+                  _buildSimpleItem(
+                    'Advanced Design Systems',
+                    'Design+Code',
+                    '2022',
+                    Icons.workspace_premium_outlined,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 8),
+
             // Skills & Endorsements
             _buildSection(
               'Yetenek Onayları',
@@ -183,12 +161,80 @@ class ProfileScreen extends StatelessWidget {
                 ],
               ),
             ),
+            const SizedBox(height: 8),
+
+            // Interests Section
+            _buildSection(
+              'İlgi Alanları',
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  _buildSimpleChip('Generative AI'),
+                  _buildSimpleChip('Fintech'),
+                  _buildSimpleChip('Sustainable Design'),
+                  _buildSimpleChip('Motion Graphics'),
+                ],
+              ),
+            ),
+            const SizedBox(height: 8),
+
+            // References Section
+            _buildSection(
+              'Referanslar',
+              Column(
+                children: [
+                  _buildReferenceItem(
+                    'Ahmet Yılmaz',
+                    'Design Director @ Spotify',
+                    'Deniz ile çalışmak büyük bir keyifti. Vizyoner ve teknik becerisi yüksek bir tasarımcı.',
+                  ),
+                  const Divider(height: 24),
+                  _buildReferenceItem(
+                    'Sarah Connor',
+                    'Lead Developer @ Airbnb',
+                    'Harika bir takım oyuncusu. Tasarımları her zaman geliştirilebilir ve kullanıcı odaklı.',
+                  ),
+                ],
+              ),
+            ),
             const SizedBox(height: 24),
           ],
         ),
       ),
     );
   }
+
+  Widget _buildSimpleChip(String label) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF8F9FA),
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: const Color(0xFFEEEEEE)),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(fontSize: 13, color: Color(0xFF666666)),
+      ),
+    );
+  }
+
+  Widget _buildReferenceItem(String name, String title, String quote) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+        Text(title, style: const TextStyle(color: Color(0xFF003EC7), fontSize: 12, fontWeight: FontWeight.w500)),
+        const SizedBox(height: 8),
+        Text(
+          '"$quote"',
+          style: const TextStyle(color: Color(0xFF666666), fontSize: 13, fontStyle: FontStyle.italic),
+        ),
+      ],
+    );
+  }
+
 
   Widget _buildHeaderStat(String label, String value) {
     return Column(
