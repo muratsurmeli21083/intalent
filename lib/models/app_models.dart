@@ -102,9 +102,9 @@ class CompetencyScore {
     id: json['id'],
     userId: json['user_id'],
     taskId: json['task_id'],
-    competencyName: json['competency_name'],
-    totalScore: (json['total_score'] as num).toDouble(),
-    consistencyIndex: (json['consistency_index'] as num).toDouble(),
+    competency_name: json['competency_name'],
+    total_score: (json['total_score'] as num).toDouble(),
+    consistency_index: (json['consistency_index'] as num).toDouble(),
   );
 }
 
@@ -142,7 +142,7 @@ class QuestionModel {
     category: json['category'],
     content: json['content'],
     options: json['options'],
-    correct_answer: json['correct_answer'],
+    correctAnswer: json['correct_answer'] ?? json['correct_answer_from_db'] ?? '',
     points: json['points'] ?? 1,
   );
 }

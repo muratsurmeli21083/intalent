@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:excel/excel.dart';
+import 'package:excel/excel.dart' as excel_pkg;
 import '../services/database_service.dart';
 import '../models/app_models.dart';
 
@@ -27,7 +27,7 @@ class _HrDashboardScreenState extends State<HrDashboardScreen> {
       setState(() => _isUploading = true);
       try {
         var bytes = result.files.first.bytes!;
-        var excel = Excel.decodeBytes(bytes);
+        var excel = excel_pkg.Excel.decodeBytes(bytes);
         
         for (var table in excel.tables.keys) {
           var sheet = excel.tables[table]!;
@@ -72,17 +72,12 @@ class _HrDashboardScreenState extends State<HrDashboardScreen> {
       backgroundColor: const Color(0xFFF8F9FA),
       body: Row(
         children: [
-          // Sidebar
           _buildSidebar(),
-          
-          // Main Content
           Expanded(
             child: Column(
               children: [
                 _buildHeader(),
-                Expanded(
-                  child: _buildMainContent(),
-                ),
+                Expanded(child: _buildMainContent()),
               ],
             ),
           ),
@@ -98,7 +93,6 @@ class _HrDashboardScreenState extends State<HrDashboardScreen> {
       child: Column(
         children: [
           const SizedBox(height: 40),
-          // Logo
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -107,10 +101,7 @@ class _HrDashboardScreenState extends State<HrDashboardScreen> {
                 width: 40,
               ),
               const SizedBox(width: 12),
-              const Text(
-                'intalent',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF003EC7)),
-              ),
+              const Text('intalent', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF003EC7))),
             ],
           ),
           const SizedBox(height: 40),
@@ -141,13 +132,7 @@ class _HrDashboardScreenState extends State<HrDashboardScreen> {
           children: [
             Icon(icon, color: isSelected ? const Color(0xFF003EC7) : Colors.grey, size: 20),
             const SizedBox(width: 12),
-            Text(
-              label,
-              style: TextStyle(
-                color: isSelected ? const Color(0xFF003EC7) : Colors.grey[700],
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-              ),
-            ),
+            Text(label, style: TextStyle(color: isSelected ? const Color(0xFF003EC7) : Colors.grey[700], fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
           ],
         ),
       ),
@@ -161,10 +146,7 @@ class _HrDashboardScreenState extends State<HrDashboardScreen> {
       color: Colors.white,
       child: Row(
         children: [
-          const Text(
-            'Yetenek Analiz Merkezi',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
+          const Text('Yetenek Analiz Merkezi', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
           const Spacer(),
           ElevatedButton.icon(
             onPressed: _isUploading ? null : _pickAndUploadExcel,
@@ -172,23 +154,7 @@ class _HrDashboardScreenState extends State<HrDashboardScreen> {
                 ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                 : const Icon(Icons.upload_file),
             label: Text(_isUploading ? 'Yükleniyor...' : 'Soru Yükle (Excel)'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF003EC7),
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-            ),
-          ),
-          const SizedBox(width: 24),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(color: const Color(0xFFF1F3F9), borderRadius: BorderRadius.circular(10)),
-            child: const Row(
-              children: [
-                Icon(Icons.search, size: 20, color: Colors.grey),
-                SizedBox(width: 8),
-                Text('Aday veya İlan Ara...', style: TextStyle(color: Colors.grey)),
-              ],
-            ),
+            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF003EC7), foregroundColor: Colors.white),
           ),
           const SizedBox(width: 24),
           const CircleAvatar(backgroundColor: Color(0xFF003EC7), child: Text('İK', style: TextStyle(color: Colors.white))),
@@ -201,9 +167,7 @@ class _HrDashboardScreenState extends State<HrDashboardScreen> {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(32),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Stats Row
           Row(
             children: [
               _buildStatCard('Toplam Aday', '342', '+%12', Icons.people, Colors.blue),
@@ -216,22 +180,6 @@ class _HrDashboardScreenState extends State<HrDashboardScreen> {
             ],
           ),
           const SizedBox(height: 32),
-          
-          // Charts/List Row
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                flex: 2,
-                child: _buildSectionCard('Son Aday Performansları', _buildCandidateList()),
-              ),
-              const SizedBox(width: 32),
-              Expanded(
-                flex: 1,
-                child: _buildSectionCard('En Yüksek Yetkinlik Dağılımı', _buildRadarChartPlaceholder()),
-              ),
-            ],
-          ),
         ],
       ),
     );
@@ -241,100 +189,22 @@ class _HrDashboardScreenState extends State<HrDashboardScreen> {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4))]),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(padding: const EdgeInsets.all(8), decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(8)), child: Icon(icon, color: color, size: 20)),
-                Text(change, style: TextStyle(color: change.startsWith('+') ? Colors.green : Colors.grey, fontWeight: FontWeight.bold, fontSize: 12)),
+                Icon(icon, color: color),
+                Text(change, style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
               ],
             ),
             const SizedBox(height: 16),
             Text(value, style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
-            Text(label, style: TextStyle(color: Colors.grey[600], fontSize: 14)),
+            Text(label, style: TextStyle(color: Colors.grey[600])),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildSectionCard(String title, Widget content) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              const Icon(Icons.more_horiz, color: Colors.grey),
-            ],
-          ),
-          const SizedBox(height: 24),
-          content,
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCandidateList() {
-    final candidates = [
-      {'name': 'Murat Sürmeli', 'test': 'Liyakat Analizi', 'score': 88, 'status': 'Başarılı'},
-      {'name': 'Ayşe Yılmaz', 'test': 'Sayısal Muhakeme', 'score': 72, 'status': 'Değerlendiriliyor'},
-      {'name': 'Mehmet Kaya', 'test': 'İngilizce B2', 'score': 94, 'status': 'Başarılı'},
-    ];
-
-    return Column(
-      children: candidates.map((c) => Padding(
-        padding: const EdgeInsets.only(bottom: 16),
-        child: Row(
-          children: [
-            CircleAvatar(child: Text(c['name'].toString()[0])),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(c['name'].toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
-                Text(c['test'].toString(), style: const TextStyle(color: Colors.grey, fontSize: 12)),
-              ]),
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-              decoration: BoxDecoration(color: const Color(0xFF003EC7).withOpacity(0.1), borderRadius: BorderRadius.circular(20)),
-              child: Text('%${c['score']}', style: const TextStyle(color: Color(0xFF003EC7), fontWeight: FontWeight.bold)),
-            ),
-          ],
-        ),
-      )).toList(),
-    );
-  }
-
-  Widget _buildRadarChartPlaceholder() {
-    return Center(
-      child: Column(
-        children: [
-          Container(
-            height: 200,
-            width: 200,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: const Color(0xFF003EC7).withOpacity(0.1), width: 2),
-            ),
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Icon(Icons.analytics, size: 80, color: const Color(0xFF003EC7).withOpacity(0.2)),
-                // Simulated radar segments...
-              ],
-            ),
-          ),
-          const SizedBox(height: 16),
-          const Text('Analitik Düşünme Odaklı', style: TextStyle(fontWeight: FontWeight.bold)),
-        ],
       ),
     );
   }

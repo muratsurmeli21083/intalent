@@ -1,10 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'screens/login_screen.dart';
 import 'screens/hr_dashboard_screen.dart';
 import 'services/database_service.dart';
 
-// TODO: Replace with your actual Supabase URL and Anon Key
 const String supabaseUrl = 'sb_publishable__EzbBggvn5vbfuos7OD7Gg_1t8xIWfe';
 const String supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBuc2l6dXFhY2Z3ZWVuY2R2b2loIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzNDEyMDUsImV4cCI6MjA5MzkxNzIwNX0.DzJVXPohni3EhDdg4xZ5fARxl7DjSuuElXYZF9pMyuM';
 
@@ -27,14 +27,13 @@ final _router = GoRouter(
       builder: (context, state) => LayoutBuilder(
         builder: (context, constraints) {
           if (constraints.maxWidth > 900) {
-            return const HrDashboardScreen(); // Geniş ekran: İK
+            return const HrDashboardScreen();
           } else {
-            return const LoginScreen(); // Dar ekran: Aday
+            return const LoginScreen();
           }
         },
       ),
     ),
-    // Manuel gitmek istersen diye route kalsın
     GoRoute(
       path: '/recruiter',
       builder: (context, state) => const HrDashboardScreen(),
