@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'exam_screen.dart';
 
 class AnalysisScreen extends StatelessWidget {
   const AnalysisScreen({super.key});
@@ -71,20 +72,20 @@ class AnalysisScreen extends StatelessWidget {
             // Temel Analiz Section
             _buildSectionTitle('Temel Analiz'),
             _buildTestList([
-              _buildTestItem('SAYISAL MUHAKEME', '5 DK', Icons.calculate_outlined),
-              _buildTestItem('SÖZEL MUHAKEME', '5 DK', Icons.translate_outlined),
-              _buildTestItem('MANTIKSAL MUHAKEME', '5 DK', Icons.psychology_outlined),
-              _buildTestItem('İNGİLİZCE', '5 DK', Icons.language_outlined),
-              _buildTestItem('MOTİVASYON ENVANTERİ', 'SÜRE SINIRI YOK', Icons.trending_up_outlined),
-              _buildTestItem('KİŞİLİK ENVANTERİ (OCEAN)', 'SÜRE SINIRI YOK', Icons.person_search_outlined),
+              _buildTestItem(context, 'SAYISAL MUHAKEME', '5 DK', Icons.calculate_outlined),
+              _buildTestItem(context, 'SÖZEL MUHAKEME', '5 DK', Icons.translate_outlined),
+              _buildTestItem(context, 'MANTIKSAL MUHAKEME', '5 DK', Icons.psychology_outlined),
+              _buildTestItem(context, 'İNGİLİZCE', '5 DK', Icons.language_outlined),
+              _buildTestItem(context, 'MOTİVASYON ENVANTERİ', 'SÜRE SINIRI YOK', Icons.trending_up_outlined),
+              _buildTestItem(context, 'KİŞİLİK ENVANTERİ (OCEAN)', 'SÜRE SINIRI YOK', Icons.person_search_outlined),
             ]),
 
             // Uzmanlık Section
             _buildSectionTitle('Uzmanlık Bilgi Beceriler'),
             _buildTestList([
-              _buildExpertItem('JAVA TEMELLERİ', 'EXPERTISE', Icons.code),
-              _buildExpertItem('İLERİ SEVİYE SQL', 'EXPERTISE', Icons.storage),
-              _buildExpertItem('SATIŞ VE İKNA BECERİLERİ', 'EXPERTISE', Icons.handshake_outlined),
+              _buildExpertItem(context, 'JAVA TEMELLERİ', 'EXPERTISE', Icons.code),
+              _buildExpertItem(context, 'İLERİ SEVİYE SQL', 'EXPERTISE', Icons.storage),
+              _buildExpertItem(context, 'SATIŞ VE İKNA BECERİLERİ', 'EXPERTISE', Icons.handshake_outlined),
             ]),
 
             // Mülakat Lab Section
@@ -181,7 +182,7 @@ class AnalysisScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTestItem(String title, String duration, IconData icon) {
+  Widget _buildTestItem(BuildContext context, String title, String duration, IconData icon) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: ListTile(
@@ -195,13 +196,13 @@ class AnalysisScreen extends StatelessWidget {
         ),
         title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
         subtitle: Text(duration, style: const TextStyle(fontSize: 11, color: Color(0xFF999999))),
-        trailing: _buildStartButton(),
-        onTap: () {},
+        trailing: _buildStartButton(context, title),
+        onTap: () => _navigateToExam(context, title),
       ),
     );
   }
 
-  Widget _buildExpertItem(String title, String type, IconData icon) {
+  Widget _buildExpertItem(BuildContext context, String title, String type, IconData icon) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: ListTile(
@@ -215,25 +216,36 @@ class AnalysisScreen extends StatelessWidget {
         ),
         title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
         subtitle: Text(type, style: const TextStyle(color: Color(0xFF003EC7), fontSize: 10, fontWeight: FontWeight.bold)),
-        trailing: _buildStartButton(),
-        onTap: () {},
+        trailing: _buildStartButton(context, title),
+        onTap: () => _navigateToExam(context, title),
       ),
     );
   }
 
-  Widget _buildStartButton() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: const Color(0xFF003EC7).withOpacity(0.1),
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: const Text(
-        'Başla',
-        style: TextStyle(
-          color: Color(0xFF003EC7),
-          fontWeight: FontWeight.bold,
-          fontSize: 12,
+  void _navigateToExam(BuildContext context, String title) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ExamScreen(title: title)),
+    );
+  }
+
+  Widget _buildStartButton(BuildContext context, String title) {
+    return InkWell(
+      onTap: () => _navigateToExam(context, title),
+      borderRadius: BorderRadius.circular(6),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: const Color(0xFF003EC7).withOpacity(0.1),
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: const Text(
+          'Başla',
+          style: TextStyle(
+            color: Color(0xFF003EC7),
+            fontWeight: FontWeight.bold,
+            fontSize: 12,
+          ),
         ),
       ),
     );
@@ -249,4 +261,5 @@ class AnalysisScreen extends StatelessWidget {
     );
   }
 }
+
 
