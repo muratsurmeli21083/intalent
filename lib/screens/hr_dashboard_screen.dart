@@ -182,9 +182,134 @@ class _HrDashboardScreenState extends State<HrDashboardScreen> {
   Widget _buildBodyContent() {
     switch (_selectedIndex) {
       case 0: return _buildDashboardView();
-      case 1: return const Center(child: Text('Aday Listesi (Gerçek Widget)'));
+      case 1: return _buildCandidatesView();
+      case 2: return _buildJobsView();
+      case 3: return _buildAnalyticsView();
       default: return const Center(child: Text('Geliştirme Aşamasında'));
     }
+  }
+
+  // --- ADAY HAVUZU SAYFASI ---
+  Widget _buildCandidatesView() {
+    return FutureBuilder<List<UserProfile>>(
+      future: _dbService.getAllCandidates(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
+        final candidates = snapshot.data ?? [];
+
+        return Padding(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Aday Havuzu', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 24),
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
+                  child: ListView.separated(
+                    itemCount: candidates.length,
+                    separatorBuilder: (context, index) => const Divider(height: 1),
+                    itemBuilder: (context, index) {
+                      final c = candidates[index];
+                      return ListTile(
+                        leading: CircleAvatar(child: Text(c.firstName?[0] ?? 'A')),
+                        title: Text('${c.firstName ?? ''} ${c.lastName ?? ''}'),
+                        subtitle: Text(c.email ?? ''),
+                        trailing: const Icon(Icons.chevron_right),
+                        onTap: () {},
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  // --- İLAN YÖNETİMİ SAYFASI ---
+  Widget _buildJobsView() {
+    return FutureBuilder<List<JobModel>>(
+      future: _dbService.getAllJobs(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
+        final jobs = snapshot.data ?? [];
+
+        return Padding(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Aktif İlanlar', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                  ElevatedButton.icon(
+                    onPressed: () {},
+                    icon: const Icon(Icons.add),
+                    label: const Text('Yeni İlan Yayınla'),
+                    style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF003EC7), foregroundColor: Colors.white),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+              Expanded(
+                child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    childAspectRatio: 1.5,
+                    crossAxisSpacing: 24,
+                    mainAxisSpacing: 24,
+                  ),
+                  itemCount: jobs.length,
+                  itemBuilder: (context, index) {
+                    final job = jobs[index];
+                    return Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(job.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                          const SizedBox(height: 8),
+                          Text(job.position ?? 'Pozisyon Belirtilmedi', style: const TextStyle(color: Colors.grey)),
+                          const Spacer(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(job.city ?? 'Uzaktan', style: const TextStyle(fontWeight: FontWeight.w500)),
+                              const Icon(Icons.more_vert, size: 20),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  // --- ANALİZ SAYFASI ---
+  Widget _buildAnalyticsView() {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.insights_rounded, size: 64, color: Color(0xFF003EC7)),
+          SizedBox(height: 16),
+          Text('Yetenek Analizleri', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          Text('Adayların test sonuçları burada raporlanacak.', style: TextStyle(color: Colors.grey)),
+        ],
+      ),
+    );
   }
 
   Widget _buildDashboardView() {
