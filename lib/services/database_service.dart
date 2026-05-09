@@ -34,9 +34,9 @@ class DatabaseService {
   }
 
   // --- Question Operations ---
-  Future<List<JobModel>> getAllQuestions() async {
+  Future<List<QuestionModel>> getQuestions() async {
     final response = await client.from('questions').select();
-    return (response as List).map((json) => JobModel.fromJson(json)).toList();
+    return (response as List).map((json) => QuestionModel.fromJson(json)).toList();
   }
 
   Future<void> insert(String table, Map<String, dynamic> data) async {
