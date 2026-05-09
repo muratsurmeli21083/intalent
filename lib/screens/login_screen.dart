@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'main_shell.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -8,14 +9,14 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Spacer(),
-              // Logo Placeholder
+              const SizedBox(height: 60),
+              // Logo
               Container(
                 width: 80,
                 height: 80,
@@ -44,6 +45,14 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 48),
+              // Tenant Domain Field
+              const TextField(
+                decoration: InputDecoration(
+                  hintText: 'Firma Adı (tenant-domain)',
+                  prefixIcon: Icon(Icons.business, size: 20),
+                ),
+              ),
+              const SizedBox(height: 16),
               const TextField(
                 decoration: InputDecoration(
                   hintText: 'E-posta Adresiniz',
@@ -59,20 +68,10 @@ class LoginScreen extends StatelessWidget {
                   suffixIcon: Icon(Icons.visibility_off_outlined, size: 20),
                 ),
               ),
-              const SizedBox(height: 12),
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () {},
-                  child: const Text(
-                    'Şifremi Unuttum',
-                    style: TextStyle(color: Color(0xFF003EC7)),
-                  ),
-                ),
-              ),
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: () {
+                  // Aday ana sayfasına git (Shell içinde)
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => const MainShell()),
@@ -102,13 +101,23 @@ class LoginScreen extends StatelessWidget {
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.linked_camera, color: Color(0xFF0077B5), size: 20), // Placeholder for LinkedIn icon
+                    Icon(Icons.linked_camera, color: Color(0xFF0077B5), size: 20),
                     SizedBox(width: 12),
                     Text('LinkedIn ile Devam Et', style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w600)),
                   ],
                 ),
               ),
-              const Spacer(),
+              const SizedBox(height: 32),
+              // Debug Button for Recruiter
+              TextButton.icon(
+                onPressed: () => context.go('/recruiter'),
+                icon: const Icon(Icons.admin_panel_settings, color: Colors.grey),
+                label: const Text(
+                  'İK Paneline Git (Debug)',
+                  style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
+                ),
+              ),
+              const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

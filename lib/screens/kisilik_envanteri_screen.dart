@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../services/supabase_service.dart';
+import '../services/database_service.dart';
 import '../models/assessment_response.dart';
+import '../models/app_models.dart';
 
 class KisilikEnvanteriScreen extends StatefulWidget {
   final String title;
@@ -11,7 +12,7 @@ class KisilikEnvanteriScreen extends StatefulWidget {
 }
 
 class _KisilikEnvanteriScreenState extends State<KisilikEnvanteriScreen> {
-  final SupabaseService _supabaseService = SupabaseService();
+  final DatabaseService _dbService = DatabaseService();
   int _currentBlockIndex = 0;
   final int _totalBlocks = 18;
   
