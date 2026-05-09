@@ -32,15 +32,18 @@ class _HrDashboardScreenState extends State<HrDashboardScreen> {
   }
 
   Future<void> _fetchStats() async {
-    // Real Supabase counts
-    final candidates = await _dbService.client.from('profiles').select('id', const FetchOptions(count: CountOption.exact));
-    final jobs = await _dbService.client.from('jobs').select('id', const FetchOptions(count: CountOption.exact));
-    
-    if (mounted) {
-      setState(() {
-        _stats['totalCandidates'] = candidates.count ?? 0;
-        _stats['activeJobs'] = jobs.count ?? 0;
-      });
+    try {
+      final candidateCount = await _dbService.getCandidateCount();
+      final jobCount = await _dbService.getJobCount();
+      
+      if (mounted) {
+        setState(() {
+          _stats['totalCandidates'] = candidateCount;
+          _stats['activeJobs'] = jobCount;
+        });
+      }
+    } catch (e) {
+      debugPrint('Stat Fetch Error: $e');
     }
   }
 

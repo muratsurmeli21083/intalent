@@ -7,48 +7,57 @@ class DatabaseService {
   factory DatabaseService() => _instance;
   DatabaseService._internal();
 
-  final SupabaseClient _client = Supabase.instance.client;
+  final SupabaseClient client = Supabase.instance.client;
 
   // --- Profile Operations ---
-  Future<UserProfile?> getProfile(String userId) async {
-    final response = await _client.from('profiles').select().eq('id', userId).maybeSingle();
-    return response != null ? UserProfile.fromJson(response) : null;
+  Future<UserProfile?> getProfile(String id) async {
+    final response = await client.from('profiles').select().eq('id', id).single();
+    return UserProfile.fromJson(response);
   }
 
   Future<void> updateProfile(UserProfile profile) async {
-    await _client.from('profiles').upsert(profile.toJson());
+    await client.from('profiles').update(profile.toJson()).eq('id', profile.id);
+  }
+
+  Future<List<UserProfile>> getAllCandidates() async {
+    final response = await client.from('profiles').select().eq('role', 'candidate');
+    return (response as List).map((json) => UserProfile.fromJson(json)).toList();
   }
 
   // --- Job Operations ---
-  Future<List<JobModel>> getJobs() async {
-    final response = await _client.from('jobs').select();
-    return response.map<JobModel>((json) => JobModel.fromJson(json)).toList();
+  Future<List<JobModel>> getAllJobs() async {
+    final response = await client.from('jobs').select();
+    return (response as List).map((json) => JobModel.fromJson(json)).toList();
   }
 
-  // --- Assessment Operations ---
-  Future<void> saveResponse(AssessmentResponse response) async {
-    await _client.from('responses').insert(response.toJson());
+  // --- Question Operations ---
+  Future<List<QuestionModel>> getQuestions() async {
+    final response = await client.from('questions').select();
+    return (response as List).map((json) => QuestionModel.fromJson(json)).toList();
   }
 
+  Future<void> insert(String table, Map<String, dynamic> data) async {
+    await client.from(table).insert(data);
+  }
+
+  // --- Response & Score Operations ---
   Future<void> saveBulkResponses(List<AssessmentResponse> responses) async {
-    final jsonList = responses.map((r) => r.toJson()).toList();
-    await _client.from('responses').insert(jsonList);
+    final data = responses.map((r) => r.toJson()).toList();
+    await client.from('responses').insert(data);
   }
 
   Future<void> saveCompetencyScore(CompetencyScore score) async {
-    await _client.from('scores').insert(score.toJson());
+    await client.from('scores').insert(score.toJson());
   }
 
-  // --- Question Bank Operations ---
-  Future<void> insert(String table, Map<String, dynamic> data) async {
-    await _client.from(table).insert(data);
+  // --- Count Helpers ---
+  Future<int> getCandidateCount() async {
+    final response = await client.from('profiles').select('id', const FetchOptions(count: CountOption.exact));
+    return response.count ?? 0;
   }
 
-  Future<List<QuestionModel>> getQuestions() async {
-    final response = await _client.from('questions').select();
-    return response.map<QuestionModel>((json) => QuestionModel.fromJson(json)).toList();
+  Future<int> getJobCount() async {
+    final response = await client.from('jobs').select('id', const FetchOptions(count: CountOption.exact));
+    return response.count ?? 0;
   }
-
-  // --- Helpers ---
-  User? get currentUser => _client.auth.currentUser;
 }
