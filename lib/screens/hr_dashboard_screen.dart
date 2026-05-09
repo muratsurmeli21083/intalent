@@ -96,10 +96,7 @@ class _HrDashboardScreenState extends State<HrDashboardScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.network(
-                'https://lh3.googleusercontent.com/aida/ADBb0ui6KVrYrRA7U3VTA5a-FEciPyigrd2NoJpc8hnw5Bcs1mWiiosaWDEhUq86TfR0qA7C434myFIK1u6baB-es8yI9TqQs-d3jepof49qNDAirjRYC1L1c69z9KxYtwtGObwm_QrEQC5iozsBrflGl-0Mcdz89grGB0-A-sUDcJ0JqYV2mU5HnhvrhTSuhkV80JUCDqpyWva3Nr7XoSpKLsJXCuaV3CfFRp0rPwOIyQUDdAwjYzax9hHSkhUkvJXQoNy73V8o4rY2',
-                width: 40,
-              ),
+              const Icon(Icons.auto_awesome, color: Color(0xFF003EC7), size: 32),
               const SizedBox(width: 12),
               const Text('intalent', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF003EC7))),
             ],
