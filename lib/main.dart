@@ -1,7 +1,17 @@
-import 'package:flutter/material.dart';
-import 'screens/login_screen.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-void main() {
+// TODO: Replace with your actual Supabase URL and Anon Key
+const String supabaseUrl = 'YOUR_SUPABASE_URL';
+const String supabaseAnonKey = 'YOUR_SUPABASE_ANON_KEY';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  await Supabase.initialize(
+    url: supabaseUrl,
+    anonKey: supabaseAnonKey,
+  );
+  
   runApp(const InTalentApp());
 }
 

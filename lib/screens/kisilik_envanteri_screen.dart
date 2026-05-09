@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../services/supabase_service.dart';
+import '../models/assessment_response.dart';
 
 class KisilikEnvanteriScreen extends StatefulWidget {
   final String title;
@@ -9,6 +11,7 @@ class KisilikEnvanteriScreen extends StatefulWidget {
 }
 
 class _KisilikEnvanteriScreenState extends State<KisilikEnvanteriScreen> {
+  final SupabaseService _supabaseService = SupabaseService();
   int _currentBlockIndex = 0;
   final int _totalBlocks = 18;
   
@@ -75,14 +78,37 @@ class _KisilikEnvanteriScreenState extends State<KisilikEnvanteriScreen> {
     return _currentSelections.values.every((v) => v != null);
   }
 
-  void _nextBlock() {
-    if (_currentBlockIndex < _totalBlocks - 1) {
-      setState(() {
-        _currentBlockIndex++;
-        _currentSelections = {0: null, 1: null, 2: null, 3: null};
-      });
-    } else {
-      _showCompletionDialog();
+  void _nextBlock() async {
+    // Send current block selections to Supabase
+    try {
+      final userId = _supabaseService.currentUser?.id;
+      
+      for (var entry in _currentSelections.entries) {
+        if (entry.value != null) {
+          final response = AssessmentResponse(
+            userId: userId,
+            questionId: '${widget.title}_B${_currentBlockIndex}_Q${entry.key}',
+            points: entry.value!,
+          );
+          
+          await _supabaseService.insert('assessment_responses', response.toJson());
+        }
+      }
+
+      if (_currentBlockIndex < _totalBlocks - 1) {
+        setState(() {
+          _currentBlockIndex++;
+          _currentSelections = {0: null, 1: null, 2: null, 3: null};
+        });
+      } else {
+        _showCompletionDialog();
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Veri gönderilirken hata oluştu: $e')),
+        );
+      }
     }
   }
 
