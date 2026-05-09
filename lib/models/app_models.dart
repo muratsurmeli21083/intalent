@@ -35,13 +35,96 @@ class UserProfile {
     firstName: json['first_name'],
     lastName: json['last_name'],
     email: json['email'],
-    role: json['role'],
+    role: json['role'] ?? 'candidate',
     currentProgressTaskId: json['current_progress_task_id'],
+  );
+}
+
+class CompetencyScore {
+  final String id;
+  final String userId;
+  final String? tenantId;
+  final String taskId;
+  final String competencyName;
+  final double score;
+  final double consistencyIndex;
+
+  CompetencyScore({
+    required this.id,
+    required this.userId,
+    this.tenantId,
+    required this.taskId,
+    required this.competencyName,
+    required this.score,
+    required this.consistencyIndex,
+  });
+
+  Map<String, dynamic> toJson() => {
+    'user_id': userId,
+    'tenant_id': tenantId,
+    'task_id': taskId,
+    'competency_name': competencyName,
+    'score': score,
+    'consistency_index': consistencyIndex,
+  };
+
+  factory CompetencyScore.fromJson(Map<String, dynamic> json) => CompetencyScore(
+    id: json['id'],
+    userId: json['user_id'],
+    tenantId: json['tenant_id'],
+    taskId: json['task_id'],
+    competencyName: json['competency_name'],
+    score: (json['score'] as num).toDouble(),
+    consistencyIndex: (json['consistency_index'] as num).toDouble(),
+  );
+}
+
+class QuestionModel {
+  final String id;
+  final String? tenantId;
+  final String? taskId;
+  final String category;
+  final String content;
+  final Map<String, dynamic> options;
+  final String correctAnswer;
+  final int points;
+
+  QuestionModel({
+    required this.id,
+    this.tenantId,
+    this.taskId,
+    required this.category,
+    required this.content,
+    required this.options,
+    required this.correctAnswer,
+    this.points = 1,
+  });
+
+  Map<String, dynamic> toJson() => {
+    'tenant_id': tenantId,
+    'task_id': taskId,
+    'category': category,
+    'content': content,
+    'options': options,
+    'correct_answer': correctAnswer,
+    'points': points,
+  };
+
+  factory QuestionModel.fromJson(Map<String, dynamic> json) => QuestionModel(
+    id: json['id'],
+    tenantId: json['tenant_id'],
+    taskId: json['task_id'],
+    category: json['category'],
+    content: json['content'],
+    options: json['options'],
+    correctAnswer: json['correct_answer'] ?? '',
+    points: json['points'] ?? 1,
   );
 }
 
 class JobModel {
   final String id;
+  final String? tenantId;
   final String title;
   final String? position;
   final String? city;
@@ -52,6 +135,7 @@ class JobModel {
 
   JobModel({
     required this.id,
+    this.tenantId,
     required this.title,
     this.position,
     this.city,
@@ -63,6 +147,7 @@ class JobModel {
 
   factory JobModel.fromJson(Map<String, dynamic> json) => JobModel(
     id: json['id'],
+    tenantId: json['tenant_id'],
     title: json['title'],
     position: json['position'],
     city: json['city'],
@@ -70,79 +155,5 @@ class JobModel {
     logoUrl: json['logo_url'],
     requiredTests: List<String>.from(json['required_tests'] ?? []),
     requiredCompetencies: json['required_competencies'],
-  );
-}
-
-class CompetencyScore {
-  final String id;
-  final String userId;
-  final String taskId;
-  final String competencyName;
-  final double totalScore;
-  final double consistencyIndex;
-
-  CompetencyScore({
-    required this.id,
-    required this.userId,
-    required this.taskId,
-    required this.competencyName,
-    required this.totalScore,
-    required this.consistencyIndex,
-  });
-
-  Map<String, dynamic> toJson() => {
-    'user_id': userId,
-    'task_id': taskId,
-    'competency_name': competencyName,
-    'total_score': totalScore,
-    'consistency_index': consistencyIndex,
-  };
-
-  factory CompetencyScore.fromJson(Map<String, dynamic> json) => CompetencyScore(
-    id: json['id'],
-    userId: json['user_id'],
-    taskId: json['task_id'],
-    competency_name: json['competency_name'],
-    total_score: (json['total_score'] as num).toDouble(),
-    consistency_index: (json['consistency_index'] as num).toDouble(),
-  );
-}
-
-class QuestionModel {
-  final String id;
-  final String? taskId;
-  final String category;
-  final String content;
-  final Map<String, dynamic> options;
-  final String correctAnswer;
-  final int points;
-
-  QuestionModel({
-    required this.id,
-    this.taskId,
-    required this.category,
-    required this.content,
-    required this.options,
-    required this.correctAnswer,
-    this.points = 1,
-  });
-
-  Map<String, dynamic> toJson() => {
-    'task_id': taskId,
-    'category': category,
-    'content': content,
-    'options': options,
-    'correct_answer': correctAnswer,
-    'points': points,
-  };
-
-  factory QuestionModel.fromJson(Map<String, dynamic> json) => QuestionModel(
-    id: json['id'],
-    taskId: json['task_id'],
-    category: json['category'],
-    content: json['content'],
-    options: json['options'],
-    correctAnswer: json['correct_answer'] ?? json['correct_answer_from_db'] ?? '',
-    points: json['points'] ?? 1,
   );
 }
