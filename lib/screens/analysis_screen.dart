@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'exam_screen.dart';
+import 'kisilik_envanteri_screen.dart';
 
 class AnalysisScreen extends StatelessWidget {
   const AnalysisScreen({super.key});
+// ... rest of the imports and class definition ...
 
   @override
   Widget build(BuildContext context) {
@@ -223,10 +225,17 @@ class AnalysisScreen extends StatelessWidget {
   }
 
   void _navigateToExam(BuildContext context, String title) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => ExamScreen(title: title)),
-    );
+    if (title == 'KİŞİLİK ENVANTERİ (OCEAN)') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const KisilikEnvanteriScreen()),
+      );
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ExamScreen(title: title)),
+      );
+    }
   }
 
   Widget _buildStartButton(BuildContext context, String title) {

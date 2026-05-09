@@ -1,0 +1,269 @@
+import 'package:flutter/material.dart';
+
+class KisilikEnvanteriScreen extends StatefulWidget {
+  const KisilikEnvanteriScreen({super.key});
+
+  @override
+  State<KisilikEnvanteriScreen> createState() => _KisilikEnvanteriScreenState();
+}
+
+class _KisilikEnvanteriScreenState extends State<KisilikEnvanteriScreen> {
+  int _currentBlockIndex = 0;
+  final int _totalBlocks = 18;
+  
+  // State to store selections for the current block (4 questions)
+  // Maps question index (0-3) to its selected score (1-6)
+  Map<int, int?> _currentSelections = {
+    0: null,
+    1: null,
+    2: null,
+    3: null,
+  };
+
+  final List<List<String>> _blocks = [
+    [
+      'Yeni stratejiler geliştirmeyi severim.',
+      'Ekip içindeki çatışmaları yönetirim.',
+      'Verileri titizlikle analiz ederim.',
+      'Zamanı verimli kullanırım.',
+    ],
+    [
+      'Zorluklar karşısında pes etmem.',
+      'Başkalarının duygularını kolayca anlarım.',
+      'Detaylara odaklanmak beni yormaz.',
+      'Yaratıcı çözümler üretmekten keyif alırım.',
+    ],
+    // Add more blocks as needed...
+  ];
+
+  void _onScoreSelected(int questionIndex, int score) {
+    setState(() {
+      // If the score was already selected by another question in this block, clear it from that question
+      _currentSelections.forEach((index, value) {
+        if (value == score && index != questionIndex) {
+          _currentSelections[index] = null;
+        }
+      });
+      
+      // Set the new score for the target question
+      _currentSelections[questionIndex] = score;
+    });
+  }
+
+  bool _isScoreUsed(int score, int currentQuestionIndex) {
+    // Check if this score is already taken by a DIFFERENT question in the same block
+    bool used = false;
+    _currentSelections.forEach((index, value) {
+      if (index != currentQuestionIndex && value == score) {
+        used = true;
+      }
+    });
+    return used;
+  }
+
+  bool _isBlockComplete() {
+    return _currentSelections.values.every((v) => v != null);
+  }
+
+  void _nextBlock() {
+    if (_currentBlockIndex < _totalBlocks - 1) {
+      setState(() {
+        _currentBlockIndex++;
+        _currentSelections = {0: null, 1: null, 2: null, 3: null};
+      });
+    } else {
+      _showCompletionDialog();
+    }
+  }
+
+  void _showCompletionDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF0A192F),
+        title: const Text('Envanter Tamamlandı', style: TextStyle(color: Colors.white)),
+        content: const Text(
+          'Kişilik envanterini başarıyla tamamladınız. Analiz sonuçlarınız profilinize yansıtılacaktır.',
+          style: TextStyle(color: Colors.white70),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); // Close dialog
+              Navigator.pop(context); // Back to Analysis screen
+            },
+            child: const Text('TAMAM', style: TextStyle(color: Color(0xFF003EC7), fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // For demo purposes, we recycle the first block if we exceed the defined blocks
+    final currentBlockQuestions = _blocks[_currentBlockIndex % _blocks.length];
+
+    return Scaffold(
+      backgroundColor: const Color(0xFF0A192F), // Dark Mode Deep Navy
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF0A192F),
+        elevation: 0,
+        title: const Text(
+          'Kişilik Envanteri',
+          style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.close, color: Colors.white70),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
+      body: Column(
+        children: [
+          // Progress Header
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Blok ${_currentBlockIndex + 1} / $_totalBlocks',
+                      style: const TextStyle(color: Colors.white70, fontSize: 14),
+                    ),
+                    Text(
+                      '${((_currentBlockIndex + 1) / _totalBlocks * 100).toInt()}%',
+                      style: const TextStyle(color: Color(0xFF003EC7), fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: LinearProgressIndicator(
+                    value: (_currentBlockIndex + 1) / _totalBlocks,
+                    backgroundColor: Colors.white10,
+                    valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF003EC7)),
+                    minHeight: 6,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                const Text(
+                  'Aşağıdaki ifadeler size ne kadar uyuyor?',
+                  style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
+                ),
+                const Text(
+                  'Her puanı blok içinde sadece bir kez kullanabilirsiniz.',
+                  style: TextStyle(color: Colors.white38, fontSize: 12),
+                ),
+              ],
+            ),
+          ),
+          
+          // Questions List
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              itemCount: 4,
+              itemBuilder: (context, index) {
+                return _buildQuestionItem(index, currentBlockQuestions[index]);
+              },
+            ),
+          ),
+          
+          // Action Button
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: const BoxDecoration(
+              color: Color(0xFF112240),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+            ),
+            child: SafeArea(
+              child: SizedBox(
+                width: double.infinity,
+                height: 54,
+                child: ElevatedButton(
+                  onPressed: _isBlockComplete() ? _nextBlock : null,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF003EC7),
+                    disabledBackgroundColor: Colors.white10,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    elevation: 0,
+                  ),
+                  child: Text(
+                    _currentBlockIndex == _totalBlocks - 1 ? 'ENVANTERİ BİTİR' : 'SONRAKİ BLOK',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuestionItem(int qIndex, String text) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '${qIndex + 1}. $text',
+            style: const TextStyle(color: Colors.white, fontSize: 14, height: 1.4),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: List.generate(6, (i) {
+              int score = i + 1;
+              bool isSelected = _currentSelections[qIndex] == score;
+              bool isUsedByOther = _isScoreUsed(score, qIndex);
+              
+              return Expanded(
+                child: GestureDetector(
+                  onTap: isUsedByOther ? null : () => _onScoreSelected(qIndex, score),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color: isSelected 
+                          ? const Color(0xFF003EC7) 
+                          : (isUsedByOther ? Colors.black26 : const Color(0xFF112240)),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: isSelected ? const Color(0xFF003EC7) : Colors.white10,
+                        width: 1,
+                      ),
+                    ),
+                    child: Center(
+                      child: Text(
+                        score.toString(),
+                        style: TextStyle(
+                          color: isSelected 
+                              ? Colors.white 
+                              : (isUsedByOther ? Colors.white12 : Colors.white70),
+                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }),
+          ),
+        ],
+      ),
+    );
+  }
+}
