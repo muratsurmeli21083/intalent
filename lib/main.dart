@@ -20,12 +20,21 @@ void main() async {
 }
 
 final _router = GoRouter(
-  initialLocation: '/recruiter', // Doğrudan İK Panelinden başla
+  initialLocation: '/',
   routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => const LoginScreen(),
+      builder: (context, state) => LayoutBuilder(
+        builder: (context, constraints) {
+          if (constraints.maxWidth > 900) {
+            return const HrDashboardScreen(); // Geniş ekran: İK
+          } else {
+            return const LoginScreen(); // Dar ekran: Aday
+          }
+        },
+      ),
     ),
+    // Manuel gitmek istersen diye route kalsın
     GoRoute(
       path: '/recruiter',
       builder: (context, state) => const HrDashboardScreen(),
