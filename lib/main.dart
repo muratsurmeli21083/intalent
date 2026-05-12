@@ -19,9 +19,8 @@ void main() async {
 
 // GLOBAL ROUTER
 final GoRouter router = GoRouter(
-  initialLocation: '/splash',
+  initialLocation: '/splash', // KESİN BAŞLANGIÇ NOKTASI
   routes: [
-    // --- GİRİŞ AKIŞI ---
     GoRoute(
       path: '/splash',
       builder: (context, state) => const SplashScreen(),
@@ -30,8 +29,6 @@ final GoRouter router = GoRouter(
       path: '/onboarding',
       builder: (context, state) => const OnboardingScreen(),
     ),
-    
-    // --- ADAY DÜNYASI ---
     GoRoute(
       path: '/',
       builder: (context, state) => const LoginScreen(),
@@ -40,16 +37,12 @@ final GoRouter router = GoRouter(
       path: '/candidate-home',
       builder: (context, state) => const MainShell(),
     ),
-    
-    // --- İK DÜNYASI ---
     GoRoute(
       path: '/recruiter',
-      name: 'hr_dashboard',
       builder: (context, state) => const HrDashboardScreen(),
     ),
     GoRoute(
       path: '/job-wizard',
-      name: 'job_wizard',
       builder: (context, state) => const JobWizardScreen(),
     ),
   ],
@@ -66,8 +59,8 @@ class InTalentApp extends StatelessWidget {
       routerConfig: router,
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF003EC7)),
-        scaffoldBackgroundColor: const Color(0xFFF8F9FA),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF4B3091)),
+        scaffoldBackgroundColor: const Color(0xFFF9F9FB),
       ),
     );
   }

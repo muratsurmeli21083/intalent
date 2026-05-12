@@ -1,252 +1,201 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'job_detail_screen.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-class DiscoverScreen extends StatelessWidget {
+class DiscoverScreen extends StatefulWidget {
   const DiscoverScreen({super.key});
 
   @override
+  State<DiscoverScreen> createState() => _DiscoverScreenState();
+}
+
+class _DiscoverScreenState extends State<DiscoverScreen> {
+  // Simüle edilmiş profil skoru (Gerçekte veritabanından gelecek)
+  double profileScore = 0.65; // %65 olsun (Kilitli kalması için)
+
+  @override
   Widget build(BuildContext context) {
+    bool isLocked = profileScore < 0.70;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF3F2EF),
-      appBar: AppBar(
-        title: Row(
-          children: [
-            const Text(
-              'intalent',
-              style: TextStyle(
-                color: Color(0xFF003EC7),
-                fontWeight: FontWeight.bold,
-                fontSize: 22,
-                letterSpacing: -0.5,
-              ),
-            ),
-            const SizedBox(width: 8),
-            Container(
-              width: 4,
-              height: 4,
-              decoration: const BoxDecoration(
-                color: Color(0xFF003EC7),
-                shape: BoxShape.circle,
-              ),
-            ),
-          ],
-        ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search, color: Color(0xFF666666)),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(Icons.notifications_none, color: Color(0xFF666666)),
-            onPressed: () {},
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
+      backgroundColor: const Color(0xFFF9F9FB),
+      body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Top Recommendations Section
-            _buildSectionHeader('Senin için en uygun 3 fırsat', true),
-            SizedBox(
-              height: 200,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+            _buildHeader(),
+            Expanded(
+              child: Stack(
                 children: [
-                  _buildOpportunityCard(context, 'Senior UX Designer', 'Spotify', 'Stockholm, SE', 'assets/spotify_logo.png', const Color(0xFF1DB954)),
-                  _buildOpportunityCard(context, 'Product Manager', 'Airbnb', 'Remote', 'assets/airbnb_logo.png', const Color(0xFFFF5A5F)),
-                  _buildOpportunityCard(context, 'Backend Engineer', 'Stripe', 'Dublin, IE', 'assets/stripe_logo.png', const Color(0xFF635BFF)),
+                  // --- İŞ İLANLARI LİSTESİ ---
+                  _buildJobList(),
+                  
+                  // --- KİLİT KATMANI (OVERLAY) ---
+                  if (isLocked) _buildLockOverlay(),
                 ],
               ),
             ),
-
-            const SizedBox(height: 24),
-
-            // All Jobs Section
-            _buildSectionHeader('Senin İçin İlanlar', false),
-            ListView(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              children: [
-                _buildJobListItem(context, 'Lead Product Designer', 'Revolut', 'Londra, UK', '2 gün önce', '94% Uyum'),
-                _buildJobListItem(context, 'UI Engineer', 'Figma', 'San Francisco, US', '5 gün önce', '88% Uyum'),
-                _buildJobListItem(context, 'Senior Content Strategist', 'Netflix', 'Los Angeles, US', '1 hafta önce', '82% Uyum'),
-                _buildJobListItem(context, 'Flutter Developer', 'Google', 'Remote', '3 saat önce', '91% Uyum'),
-              ],
-            ),
-            const SizedBox(height: 24),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildSectionHeader(String title, bool showSparkle) {
+  Widget _buildHeader() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
+      padding: const EdgeInsets.all(24.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('İşleri Keşfet', 
+            style: GoogleFonts.plusJakartaSans(
+              fontSize: 28, 
+              fontWeight: FontWeight.w800, 
+              color: const Color(0xFF1A1F36)
+            )
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Sana en uygun fırsatları liyakat bazlı eşleştiriyoruz.',
+            style: TextStyle(color: Colors.grey[600], fontSize: 14),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildJobList() {
+    return ListView.builder(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      itemCount: 10,
+      itemBuilder: (context, index) {
+        return _buildJobCard(index);
+      },
+    );
+  }
+
+  Widget _buildJobCard(int index) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 20)],
+      ),
       child: Row(
         children: [
-          Text(
-            title,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          Container(
+            width: 50, height: 50,
+            decoration: BoxDecoration(color: const Color(0xFFF4F0FF), borderRadius: BorderRadius.circular(12)),
+            child: const Icon(Icons.business, color: Color(0xFF4B3091)),
           ),
-          if (showSparkle) ...[
-            const SizedBox(width: 8),
-            const Icon(Icons.auto_awesome, color: Color(0xFF003EC7), size: 18),
-          ],
+          const SizedBox(width: 16),
+          const Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Senior Product Designer', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              Text('Google • Remote', style: TextStyle(color: Colors.grey, fontSize: 12)),
+            ],
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildOpportunityCard(BuildContext context, String title, String company, String location, String logoPath, Color brandColor) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => JobDetailScreen(
-              title: title,
-              company: company,
-              location: location,
+  Widget _buildLockOverlay() {
+    return ClipRRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          color: Colors.white.withOpacity(0.4),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(40.0),
+              child: Container(
+                padding: const EdgeInsets.all(32),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(32),
+                  boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 40)],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(color: const Color(0xFFF4F0FF), shape: BoxShape.circle),
+                      child: const Icon(Icons.lock_rounded, color: Color(0xFF4B3091), size: 48),
+                    ),
+                    const SizedBox(height: 24),
+                    Text(
+                      'Fırsatlar Kilitli',
+                      style: GoogleFonts.plusJakartaSans(fontSize: 22, fontWeight: FontWeight.w800),
+                    ),
+                    const SizedBox(height: 12),
+                    RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                        style: const TextStyle(color: Colors.grey, fontSize: 14, height: 1.5),
+                        children: [
+                          const TextSpan(text: 'İş ilanlarını görebilmek için profil skorunu '),
+                          TextSpan(
+                            text: '%70', 
+                            style: TextStyle(color: const Color(0xFF4B3091), fontWeight: FontWeight.bold)
+                          ),
+                          const TextSpan(text: ' ve üzerine çıkarman gerekiyor.'),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    _buildProgressBar(),
+                    const SizedBox(height: 32),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Profil tamamlama ekranına yönlendir
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF4B3091),
+                        foregroundColor: Colors.white,
+                        minimumSize: const Size(double.infinity, 56),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        elevation: 0,
+                      ),
+                      child: const Text('Profilini Tamamla', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
-        );
-      },
-      child: Container(
-        width: 260,
-        margin: const EdgeInsets.only(right: 16),
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFFEEEEEE)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.02),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: brandColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Icon(Icons.business, color: brandColor), // Placeholder for logo
-                ),
-                const Icon(Icons.bookmark_border, color: Color(0xFFCCCCCC)),
-              ],
-            ),
-            const Spacer(),
-            Text(
-              title,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              '$company • $location',
-              style: const TextStyle(color: Color(0xFF666666), fontSize: 13),
-            ),
-            const SizedBox(height: 12),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: const Color(0xFF003EC7).withOpacity(0.05),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: const Text(
-                'AI Analiz: Yüksek Uyum',
-                style: TextStyle(color: Color(0xFF003EC7), fontSize: 11, fontWeight: FontWeight.bold),
-              ),
-            ),
-          ],
         ),
       ),
     );
   }
 
-  Widget _buildJobListItem(BuildContext context, String title, String company, String location, String time, String matchScore) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => JobDetailScreen(
-              title: title,
-              company: company,
-              location: location,
-            ),
-          ),
-        );
-      },
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFFEEEEEE)),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildProgressBar() {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                color: const Color(0xFFF8F9FA),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Icon(Icons.business, color: Color(0xFF666666)),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                  ),
-                  Text(
-                    company,
-                    style: const TextStyle(color: Color(0xFF003EC7), fontSize: 13, fontWeight: FontWeight.w500),
-                  ),
-                  Text(
-                    location,
-                    style: const TextStyle(color: Color(0xFF666666), fontSize: 12),
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Text(time, style: const TextStyle(color: Color(0xFF999999), fontSize: 11)),
-                      const SizedBox(width: 12),
-                      const Icon(Icons.verified, size: 12, color: Colors.green),
-                      const SizedBox(width: 4),
-                      Text(matchScore, style: const TextStyle(color: Colors.green, fontSize: 11, fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            const Icon(Icons.bookmark_border, color: Color(0xFFCCCCCC)),
+            Text('Profil Skorun', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey[700])),
+            Text('${(profileScore * 100).toInt()}%', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF4B3091))),
           ],
         ),
-      ),
+        const SizedBox(height: 8),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(4),
+          child: LinearProgressIndicator(
+            value: profileScore,
+            minHeight: 8,
+            backgroundColor: const Color(0xFFF4F0FF),
+            valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF4B3091)),
+          ),
+        ),
+      ],
     );
   }
 }
