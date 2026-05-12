@@ -16,10 +16,22 @@ void main() async {
   runApp(const InTalentApp());
 }
 
+import 'screens/onboarding_screen.dart';
+
 // GLOBAL ROUTER
 final GoRouter router = GoRouter(
-  initialLocation: '/',
+  initialLocation: '/splash',
   routes: [
+    // --- GİRİŞ AKIŞI ---
+    GoRoute(
+      path: '/splash',
+      builder: (context, state) => const SplashScreen(),
+    ),
+    GoRoute(
+      path: '/onboarding',
+      builder: (context, state) => const OnboardingScreen(),
+    ),
+    
     // --- ADAY DÜNYASI ---
     GoRoute(
       path: '/',
