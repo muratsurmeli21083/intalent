@@ -51,11 +51,14 @@ CREATE TABLE IF NOT EXISTS public.questions (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   tenant_id UUID REFERENCES public.tenants(id),
   task_id UUID REFERENCES public.tasks(id) ON DELETE CASCADE,
-  category TEXT NOT NULL, -- Sayısal, Sözel, Mantıksal, İngilizce
-  content TEXT NOT NULL,
-  options JSONB NOT NULL, -- {"A": "...", "B": "...", "C": "...", "D": "..."}
-  correct_answer TEXT NOT NULL,
-  points INTEGER DEFAULT 1,
+  type TEXT, -- Kişilik, Yetenek, Bilgi
+  category TEXT NOT NULL, -- Sayısal, Sözel, Mantıksal, İngilizce, Kişilik
+  content TEXT NOT NULL, -- Soru metni. (HTML/Markdown destekli)
+  image_url TEXT, -- Resimli sorular için Supabase Storage linki
+  options JSONB NOT NULL, -- {"A": "Metin", "B": "Metin"} formatında şıklar
+  correct_answer TEXT, -- Doğru şık (A, B, C, D). Kişilik envanterinde null.
+  dimension_id TEXT, -- Kişilik envanteri için: Dominance, Influence vb.
+  points INTEGER DEFAULT 1, -- Bilgi sınavları için ağırlık puanı
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 

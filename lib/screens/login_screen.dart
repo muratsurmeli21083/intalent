@@ -158,12 +158,6 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 20),
               Text('intalent',
                 style: GoogleFonts.inter(fontSize: 32, fontWeight: FontWeight.w900, color: const Color(0xFF003EC7), letterSpacing: -1.5)),
-              const SizedBox(height: 6),
-              Text(
-                _isLogin ? 'Kariyer yolculuğuna devam et' : 'Hesap oluştur, kariyerini keşfet',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-              ),
               const SizedBox(height: 40),
 
               // --- GOOGLE LOGIN ---
@@ -174,9 +168,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
               // --- FORM ---
               if (!_isLogin) ...[
-                _buildTextField(_firstNameController, 'Ad', Icons.person_outline),
-                const SizedBox(height: 14),
-                _buildTextField(_lastNameController, 'Soyad', Icons.person_outline),
+                Row(
+                  children: [
+                    Expanded(child: _buildTextField(_firstNameController, 'Ad', Icons.person_outline)),
+                    const SizedBox(width: 12),
+                    Expanded(child: _buildTextField(_lastNameController, 'Soyad', Icons.person_outline)),
+                  ],
+                ),
                 const SizedBox(height: 14),
               ],
               _buildTextField(_emailController, 'E-posta', Icons.email_outlined, keyboardType: TextInputType.emailAddress),

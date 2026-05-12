@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 // --- ONBOARDING SCREEN ---
 class OnboardingScreen extends StatefulWidget {
@@ -166,7 +167,40 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 4), () => context.go('/onboarding'));
+    _checkAuthState();
+  }
+
+  void _checkAuthState() {
+    final supabase = Supabase.instance.client;
+    final user = supabase.auth.currentUser;
+    
+    if (user != null) {
+      // Kullanıcı zaten login'se, ana sayfaya git
+      _redirectUser(user);
+    } else {
+      // Kullanıcı login'se değilse, timer'a devam et
+      Future.delayed(const Duration(seconds: 4), () {
+        if (mounted) context.go('/onboarding');
+      });
+    }
+    
+    // Auth state değişikliğini dinle (Google OAuth callback vb.)
+    supabase.auth.onAuthStateChange.listen((data) {
+      if (data.session != null && mounted) {
+        _redirectUser(data.session!.user);
+      }
+    });
+  }
+
+  void _redirectUser(User user) {
+    final role = user.userMetadata?['role'] ?? 'candidate';
+    if (mounted) {
+      if (role == 'admin' || role == 'recruiter') {
+        context.go('/recruiter');
+      } else {
+        context.go('/candidate-home');
+      }
+    }
   }
 
   @override

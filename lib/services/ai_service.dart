@@ -6,7 +6,7 @@ class AiService {
   static const String _apiKey = 'YOUR_API_KEY_HERE'; // Buraya kendi anahtarını eklemelisin
   static const String _baseUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
 
-  static Future<String> getCoachingResponse(List<Map<String, String>> history) async {
+  Future<String> getCoachingResponse(List<Map<String, String>> history) async {
     try {
       // Mesaj geçmişini Gemini formatına çeviriyoruz
       final contents = history.map((msg) {

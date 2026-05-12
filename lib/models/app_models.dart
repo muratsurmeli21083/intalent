@@ -83,30 +83,39 @@ class QuestionModel {
   final String id;
   final String? tenantId;
   final String? taskId;
+  final String? type;
   final String category;
   final String content;
+  final String? imageUrl;
   final Map<String, dynamic> options;
-  final String correctAnswer;
+  final String? correctAnswer;
+  final String? dimensionId;
   final int points;
 
   QuestionModel({
     required this.id,
     this.tenantId,
     this.taskId,
+    this.type,
     required this.category,
     required this.content,
+    this.imageUrl,
     required this.options,
-    required this.correctAnswer,
+    this.correctAnswer,
+    this.dimensionId,
     this.points = 1,
   });
 
   Map<String, dynamic> toJson() => {
     'tenant_id': tenantId,
     'task_id': taskId,
+    'type': type,
     'category': category,
     'content': content,
+    'image_url': imageUrl,
     'options': options,
     'correct_answer': correctAnswer,
+    'dimension_id': dimensionId,
     'points': points,
   };
 
@@ -114,10 +123,13 @@ class QuestionModel {
     id: json['id'],
     tenantId: json['tenant_id'],
     taskId: json['task_id'],
+    type: json['type'],
     category: json['category'],
     content: json['content'],
+    imageUrl: json['image_url'],
     options: json['options'],
-    correctAnswer: json['correct_answer'] ?? '',
+    correctAnswer: json['correct_answer'],
+    dimensionId: json['dimension_id'],
     points: json['points'] ?? 1,
   );
 }
@@ -132,6 +144,7 @@ class JobModel {
   final String? logoUrl;
   final List<String>? requiredTests;
   final Map<String, dynamic>? requiredCompetencies;
+  final Map<String, dynamic>? weightCoefficients; // Yeni eklenen alan
 
   JobModel({
     required this.id,
@@ -143,17 +156,19 @@ class JobModel {
     this.logoUrl,
     this.requiredTests,
     this.requiredCompetencies,
+    this.weightCoefficients, // Constructor'a eklendi
   });
 
   factory JobModel.fromJson(Map<String, dynamic> json) => JobModel(
-    id: json['id'],
-    tenantId: json['tenant_id'],
-    title: json['title'],
-    position: json['position'],
-    city: json['city'],
-    definition: json['definition'],
-    logoUrl: json['logo_url'],
-    requiredTests: List<String>.from(json['required_tests'] ?? []),
-    requiredCompetencies: json['required_competencies'],
+    id: json["id"],
+    tenantId: json["tenant_id"],
+    title: json["title"],
+    position: json["position"],
+    city: json["city"],
+    definition: json["definition"],
+    logoUrl: json["logo_url"],
+    requiredTests: List<String>.from(json["required_tests"] ?? []),
+    requiredCompetencies: json["required_competencies"],
+    weightCoefficients: json["weight_coefficients"], // fromJson'a eklendi
   );
 }
