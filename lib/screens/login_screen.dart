@@ -55,31 +55,49 @@ class _LoginScreenState extends State<LoginScreen> {
           return;
         }
 
-        final res = await _supabase.auth.signUp(
-          email: email,
-          password: password,
-          data: {'first_name': firstName, 'last_name': lastName, 'role': 'candidate'},
-        );
+        try {
+          final res = await _supabase.auth.signUp(
+            email: email,
+            password: password,
+            data: {'first_name': firstName, 'last_name': lastName, 'role': 'candidate'},
+          );
 
-        if (res.user != null) {
-          // Profil kaydı oluştur
-          await _supabase.from('profiles').upsert({
-            'id': res.user!.id,
-            'email': email,
-            'first_name': firstName,
-            'last_name': lastName,
-            'role': 'candidate',
-          });
+          if (res.user != null) {
+            // Profil kaydı oluştur
+            try {
+              await _supabase.from('profiles').upsert({
+                'id': res.user!.id,
+                'email': email,
+                'first_name': firstName,
+                'last_name': lastName,
+                'role': 'candidate',
+              }).select();
+              
+              if (mounted) {
+                _showSuccess('Kayıt başarılı! Lütfen e-postanızı doğrulayın ve giriş yapın.');
+                setState(() => _isLogin = true);
+              }
+            } catch (profileError) {
+              print('Profil oluşturma hatası: $profileError');
+              if (mounted) {
+                _showError('Profil oluşturulurken hata oluştu: $profileError');
+              }
+            }
+          } else {
+            _showError('Kayıt başarısız oldu. Lütfen tekrar deneyin.');
+          }
+        } catch (signupError) {
+          print('Sign up hatası: $signupError');
           if (mounted) {
-            _showSuccess('Kayıt başarılı! Lütfen e-postanızı doğrulayın ve giriş yapın.');
-            setState(() => _isLogin = true);
+            _showError('Kayıt sırasında hata oluştu: $signupError');
           }
         }
       }
     } on AuthException catch (e) {
       _showError(_translateAuthError(e.message));
     } catch (e) {
-      _showError(e.toString());
+      print('Beklenmeyen hata: $e');
+      _showError('Bir hata oluştu: ${e.toString()}');
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -240,11 +258,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.network(
-            'https://www.google.com/favicon.ico',
-            width: 22, height: 22,
-            errorBuilder: (_, __, ___) => const Icon(Icons.g_mobiledata, size: 24, color: Color(0xFF4285F4)),
-          ),
+          const Icon(Icons.g_mobiledata, size: 22, color: Color(0xFF4285F4)),
           const SizedBox(width: 12),
           const Text('Google ile Devam Et', style: TextStyle(color: Color(0xFF191C1E), fontWeight: FontWeight.w600, fontSize: 15)),
         ],
@@ -269,7 +283,10 @@ class _LoginScreenState extends State<LoginScreen> {
     return TextField(
       controller: ctrl,
       keyboardType: keyboardType,
-      style: const TextStyle(fontSize: 15),
+      enabled: true,
+      readOnly: false,
+      style: const TextStyle(fontSize: 15, color: Color(0xFF191C1E)),
+      cursorColor: const Color(0xFF003EC7),
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: TextStyle(color: Colors.grey[400]),
@@ -288,7 +305,10 @@ class _LoginScreenState extends State<LoginScreen> {
     return TextField(
       controller: _passwordController,
       obscureText: _obscure,
-      style: const TextStyle(fontSize: 15),
+      enabled: true,
+      readOnly: false,
+      style: const TextStyle(fontSize: 15, color: Color(0xFF191C1E)),
+      cursorColor: const Color(0xFF003EC7),
       decoration: InputDecoration(
         hintText: 'Şifre',
         hintStyle: TextStyle(color: Colors.grey[400]),
