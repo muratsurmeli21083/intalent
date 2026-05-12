@@ -82,18 +82,19 @@ class _KisilikEnvanteriScreenState extends State<KisilikEnvanteriScreen> {
   void _nextBlock() async {
     try {
       final userId = _dbService.currentUser?.id;
-      if (userId == null) throw 'Kullanıcı bulunamadı';
-      
-      List<AssessmentResponse> blockResponses = [];
-      for (var entry in _currentSelections.entries) {
-        blockResponses.add(AssessmentResponse(
-          userId: userId,
-          questionId: '${widget.title}_B${_currentBlockIndex}_Q${entry.key}',
-          points: entry.value!,
-        ));
+
+      // Kullanıcı oturumu varsa yanıtları kaydet, yoksa sadece ilerle
+      if (userId != null) {
+        List<AssessmentResponse> blockResponses = [];
+        for (var entry in _currentSelections.entries) {
+          blockResponses.add(AssessmentResponse(
+            userId: userId,
+            questionId: '${widget.title}_B${_currentBlockIndex}_Q${entry.key}',
+            points: entry.value!,
+          ));
+        }
+        await _dbService.saveBulkResponses(blockResponses);
       }
-      
-      await _dbService.saveBulkResponses(blockResponses);
 
       if (_currentBlockIndex < _totalBlocks - 1) {
         setState(() {
@@ -101,13 +102,31 @@ class _KisilikEnvanteriScreenState extends State<KisilikEnvanteriScreen> {
           _currentSelections = {0: null, 1: null, 2: null, 3: null};
         });
       } else {
-        await _finalizeInventory(userId);
+        // Finalize - userId null ise sadece dialog göster
+        if (userId != null) {
+          await _finalizeInventory(userId);
+        } else {
+          _showCompletionDialog();
+        }
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Hata: $e')),
+          SnackBar(
+            content: Text('Kayıt hatası: $e'),
+            backgroundColor: Colors.orange,
+            behavior: SnackBarBehavior.floating,
+          ),
         );
+        // Hata olsa bile ilerle
+        if (_currentBlockIndex < _totalBlocks - 1) {
+          setState(() {
+            _currentBlockIndex++;
+            _currentSelections = {0: null, 1: null, 2: null, 3: null};
+          });
+        } else {
+          _showCompletionDialog();
+        }
       }
     }
   }
