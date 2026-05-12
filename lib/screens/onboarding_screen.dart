@@ -60,35 +60,34 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             itemCount: _onboardingData.length,
             itemBuilder: (context, index) => _buildOnboardingPage(_onboardingData[index]),
           ),
-          // Top Header
-          Positioned(
-            top: 60,
-            left: 24,
-            right: 24,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('intalent', style: GoogleFonts.plusJakartaSans(fontSize: 24, fontWeight: FontWeight.w900, color: const Color(0xFF4B3091))),
-                Text('ADIM ${_onboardingData[_currentPage]['step']}', style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1.2)),
-              ],
-            ),
-          ),
-          // Progress Bar
-          Positioned(
-            top: 105,
-            left: 24,
-            right: 24,
-            child: Row(
-              children: List.generate(4, (index) => Expanded(
-                child: Container(
-                  height: 4,
-                  margin: const EdgeInsets.symmetric(horizontal: 2),
-                  decoration: BoxDecoration(
-                    color: index <= _currentPage ? const Color(0xFF4B3091) : const Color(0xFFE5E7EB),
-                    borderRadius: BorderRadius.circular(2),
+          // Header Overlay
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('intalent', style: GoogleFonts.plusJakartaSans(fontSize: 24, fontWeight: FontWeight.w900, color: const Color(0xFF4B3091))),
+                      Text('ADIM ${_onboardingData[_currentPage]['step']}', style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1.2)),
+                    ],
                   ),
-                ),
-              )),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: List.generate(4, (index) => Expanded(
+                      child: Container(
+                        height: 4,
+                        margin: const EdgeInsets.symmetric(horizontal: 2),
+                        decoration: BoxDecoration(
+                          color: index <= _currentPage ? const Color(0xFF4B3091) : const Color(0xFFE5E7EB),
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                      ),
+                    )),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -97,30 +96,33 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   Widget _buildOnboardingPage(Map<String, dynamic> data) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Column(
-        children: [
-          const SizedBox(height: 140),
-          Text(
-            data['title'],
-            textAlign: TextAlign.center,
-            style: GoogleFonts.plusJakartaSans(fontSize: 32, fontWeight: FontWeight.w800, color: const Color(0xFF1A1F36), height: 1.1),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            data['desc'],
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 14, color: Colors.grey, height: 1.5),
-          ),
-          const SizedBox(height: 32),
-          _buildActionButtons(data),
-          const SizedBox(height: 40),
-          if (data['isProfile'] == true) _buildProfilePreview(),
-          if (data['isJourney'] == true) _buildJourneyPreview(),
-          if (data['isExplore'] == true) _buildExplorePreview(),
-          if (data['isAiCoach'] == true) _buildAiCoachPreview(),
-        ],
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: Column(
+          children: [
+            const SizedBox(height: 140),
+            Text(
+              data['title'],
+              textAlign: TextAlign.center,
+              style: GoogleFonts.plusJakartaSans(fontSize: 32, fontWeight: FontWeight.w800, color: const Color(0xFF1A1F36), height: 1.1),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              data['desc'],
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 14, color: Colors.grey, height: 1.5),
+            ),
+            const SizedBox(height: 32),
+            _buildActionButtons(data),
+            const SizedBox(height: 40),
+            if (data['isProfile'] == true) _buildProfilePreview(),
+            if (data['isJourney'] == true) _buildJourneyPreview(),
+            if (data['isExplore'] == true) _buildExplorePreview(),
+            if (data['isAiCoach'] == true) _buildAiCoachPreview(),
+            const SizedBox(height: 100), // Bottom padding for scroll
+          ],
+        ),
       ),
     );
   }
@@ -170,19 +172,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       ),
       child: Column(
         children: [
-          const Row(
+          Row(
             children: [
-              CircleAvatar(radius: 24, backgroundImage: NetworkImage('https://i.pravatar.cc/150?u=123')),
-              SizedBox(width: 12),
-              Column(
+              const CircleAvatar(radius: 24, backgroundColor: Color(0xFFF4F0FF), child: Icon(Icons.person, color: Color(0xFF4B3091))),
+              const SizedBox(width: 12),
+              const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Elif Yılmaz', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                   Text('Senior Product Designer', style: TextStyle(color: Colors.grey, fontSize: 12)),
                 ],
               ),
-              Spacer(),
-              Icon(Icons.verified_user, color: Color(0xFF4B3091), size: 20),
+              const Spacer(),
+              Icon(Icons.verified_user, color: const Color(0xFF4B3091).withOpacity(0.8), size: 20),
             ],
           ),
           const SizedBox(height: 20),
@@ -207,13 +209,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   Widget _buildJourneyPreview() {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(24)),
       child: Column(
         children: [
           const Text('85%', style: TextStyle(fontSize: 48, fontWeight: FontWeight.w900, color: Color(0xFF4B3091))),
-          const Text('Potansiyel Skoru', style: TextStyle(fontWeight: FontWeight.bold)),
-          const SizedBox(height: 20),
+          const Text('Potansiyel Skoru', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          const SizedBox(height: 24),
           _buildMiniCard('Bilişsel Yetenek Testi', 'TAMAMLANDI', Colors.green),
           _buildMiniCard('Liderlik Stili Analizi', 'BEKLİYOR', Colors.orange),
         ],
@@ -223,13 +225,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   Widget _buildMiniCard(String title, String status, Color color) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(12),
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(color: const Color(0xFFF9F9FB), borderRadius: BorderRadius.circular(12)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(title, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
+          Text(title, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
           Text(status, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: color)),
         ],
       ),
@@ -241,7 +243,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       height: 120,
       width: double.infinity,
       decoration: BoxDecoration(color: const Color(0xFF4B3091), borderRadius: BorderRadius.circular(24)),
-      child: const Center(child: Icon(Icons.search, color: Colors.white, size: 48)),
+      child: const Center(child: Icon(Icons.search_rounded, color: Colors.white, size: 48)),
     );
   }
 
@@ -249,24 +251,26 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(24)),
-      child: const Column(
+      child: Column(
         children: [
-          Row(
+          const Row(
             children: [
-              Icon(Icons.psychology, color: Color(0xFF4B3091)),
+              Icon(Icons.psychology_outlined, color: Color(0xFF4B3091)),
               SizedBox(width: 12),
-              Text('Gelecek mülakatın için hazır mısın?', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
+              Text('Gelecek mülakatın için hazır mısın?', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
             ],
           ),
-          SizedBox(height: 12),
-          Text('"...Harika olur! Özellikle kriz anlarını yönetme konusunda pratik yapmak istiyorum."', style: TextStyle(fontSize: 12, color: Colors.grey, fontStyle: FontStyle.italic)),
+          const SizedBox(height: 12),
+          Text(
+            '"...Harika olur! Özellikle kriz anlarını yönetme konusunda pratik yapmak istiyorum."',
+            style: TextStyle(fontSize: 12, color: Colors.grey[700], fontStyle: FontStyle.italic),
+          ),
         ],
       ),
     );
   }
 }
 
-// SPLASH SCREEN REVİZYON
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -287,32 +291,44 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF9F9FB),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Spacer(),
-            Text('intalent', style: GoogleFonts.plusJakartaSans(fontSize: 48, fontWeight: FontWeight.w900, color: const Color(0xFF4B3091), letterSpacing: -2)),
-            const SizedBox(height: 16),
-            const Text('Keşfedilme zamanı...', style: TextStyle(color: Colors.grey, letterSpacing: 1, fontSize: 16)),
-            const SizedBox(height: 32),
-            const Row(
+      body: Stack(
+        children: [
+          Center(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CircleAvatar(radius: 3, backgroundColor: Color(0xFF4B3091)),
-                SizedBox(width: 8),
-                CircleAvatar(radius: 3, backgroundColor: Color(0xFFD1D5DB)),
-                SizedBox(width: 8),
-                CircleAvatar(radius: 3, backgroundColor: Color(0xFFD1D5DB)),
+                Text('intalent', style: GoogleFonts.plusJakartaSans(fontSize: 48, fontWeight: FontWeight.w900, color: const Color(0xFF4B3091), letterSpacing: -2)),
+                const SizedBox(height: 16),
+                const Text('Keşfedilme zamanı...', style: TextStyle(color: Colors.grey, letterSpacing: 1, fontSize: 16)),
+                const SizedBox(height: 32),
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircleAvatar(radius: 3, backgroundColor: Color(0xFF4B3091)),
+                    SizedBox(width: 8),
+                    CircleAvatar(radius: 3, backgroundColor: Color(0xFFD1D5DB)),
+                    SizedBox(width: 8),
+                    CircleAvatar(radius: 3, backgroundColor: Color(0xFFD1D5DB)),
+                  ],
+                ),
               ],
             ),
-            const Spacer(),
-            _buildStatusCard(),
-            const SizedBox(height: 60),
-            const Text('● DIGITAL MERITOCRACY', style: TextStyle(color: Color(0xFFE5B26F), letterSpacing: 2, fontSize: 10, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 40),
-          ],
-        ),
+          ),
+          Positioned(
+            bottom: 120,
+            left: 0,
+            right: 0,
+            child: Center(child: _buildStatusCard()),
+          ),
+          const Positioned(
+            bottom: 60,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: Text('● DIGITAL MERITOCRACY', style: TextStyle(color: Color(0xFFE5B26F), letterSpacing: 2, fontSize: 10, fontWeight: FontWeight.bold)),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -327,6 +343,7 @@ class _SplashScreenState extends State<SplashScreen> {
         boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 30, offset: const Offset(0, 10))],
       ),
       child: const Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
