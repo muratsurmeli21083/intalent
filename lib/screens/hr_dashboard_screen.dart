@@ -1,3 +1,7 @@
+import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:excel/excel.dart' as excel_pkg;
+import 'package:fl_chart/fl_chart.dart';
 import 'package:go_router/go_router.dart';
 import '../services/database_service.dart';
 import '../models/app_models.dart';
@@ -15,7 +19,6 @@ class _HrDashboardScreenState extends State<HrDashboardScreen> {
   int _selectedIndex = 0;
   bool _isUploading = false;
 
-  // Mock data for initial look, will be replaced by FutureBuilders
   final Map<String, dynamic> _stats = {
     'totalCandidates': 0,
     'activeJobs': 0,
@@ -161,7 +164,6 @@ class _HrDashboardScreenState extends State<HrDashboardScreen> {
           const Spacer(),
           ElevatedButton.icon(
             onPressed: () {
-              print('NAVIGATING TO JOB WIZARD...');
               context.push('/job-wizard');
             },
             icon: const Icon(Icons.add_rounded),
@@ -191,7 +193,6 @@ class _HrDashboardScreenState extends State<HrDashboardScreen> {
     }
   }
 
-  // --- ADAY HAVUZU SAYFASI ---
   Widget _buildCandidatesView() {
     return FutureBuilder<List<UserProfile>>(
       future: _dbService.getAllCandidates(),
@@ -232,7 +233,6 @@ class _HrDashboardScreenState extends State<HrDashboardScreen> {
     );
   }
 
-  // --- İLAN YÖNETİMİ SAYFASI ---
   Widget _buildJobsView() {
     return FutureBuilder<List<JobModel>>(
       future: _dbService.getAllJobs(),
@@ -299,7 +299,6 @@ class _HrDashboardScreenState extends State<HrDashboardScreen> {
     );
   }
 
-  // --- ANALİZ SAYFASI ---
   Widget _buildAnalyticsView() {
     return const Center(
       child: Column(
@@ -320,7 +319,6 @@ class _HrDashboardScreenState extends State<HrDashboardScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Stat Cards
           Row(
             children: [
               _buildModernStatCard('Toplam Aday', _stats['totalCandidates'].toString(), Icons.people_outline, const Color(0xFF003EC7)),
@@ -333,7 +331,6 @@ class _HrDashboardScreenState extends State<HrDashboardScreen> {
             ],
           ),
           const SizedBox(height: 32),
-          // Charts and Lists
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -528,5 +525,4 @@ class _HrDashboardScreenState extends State<HrDashboardScreen> {
       }
     }
   }
-} // Sınıfın son parantezi
 }
