@@ -522,8 +522,11 @@ class _HrDashboardScreenState extends State<HrDashboardScreen> {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Hata: $e')));
         }
       } finally {
-        setState(() => _isUploading = false);
+        if (mounted) {
+          setState(() => _isUploading = false);
+        }
       }
     }
   }
+} // Sınıfın son parantezi
 }
