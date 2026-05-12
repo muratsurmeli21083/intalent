@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../services/ai_service.dart';
 
 class AiCoachScreen extends StatefulWidget {
   const AiCoachScreen({super.key});
@@ -254,30 +255,42 @@ class _AiCoachScreenState extends State<AiCoachScreen> {
     );
   }
 
-  void _sendMessage() {
+  void _sendMessage() async {
     if (_controller.text.isEmpty) return;
     
+    String userMessage = _controller.text;
     setState(() {
-      _messages.add({'role': 'user', 'content': _controller.text});
+      _messages.add({'role': 'user', 'content': userMessage});
       _isTyping = true;
     });
     
     _controller.clear();
     _scrollToBottom();
     
-    // AI Cevabı (Maliyet odaklı gecikme simülasyonu)
-    Future.delayed(const Duration(seconds: 2), () {
+    // GERÇEK AI CEVABI
+    try {
+      final response = await AiService.getCoachingResponse(_messages);
       if (mounted) {
         setState(() {
           _messages.add({
             'role': 'assistant',
-            'content': 'Anlıyorum. Bu anlattığın durumun, senin en baştaki hedefinle olan bağlantısını nasıl kurarsın?'
+            'content': response
           });
           _isTyping = false;
         });
         _scrollToBottom();
       }
-    });
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _messages.add({
+            'role': 'assistant',
+            'content': "Bağlantıda bir sorun oluştu. Lütfen tekrar deneyebilir misin?"
+          });
+          _isTyping = false;
+        });
+      }
+    }
   }
 
   void _scrollToBottom() {
