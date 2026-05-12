@@ -118,6 +118,21 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  Future<void> _handleLinkedInLogin() async {
+    setState(() => _isLoading = true);
+    try {
+      await _supabase.auth.signInWithOAuth(
+        OAuthProvider.linkedin,
+        redirectTo: 'io.supabase.intalent://login-callback',
+      );
+      // OAuth akışı tamamlandığında onAuthStateChange dinleyicisi tetiklenecek
+    } catch (e) {
+      _showError('LinkedIn ile giriş başarısız: $e');
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
   void _redirectUser(User user) {
     // Kullanıcı rolüne göre yönlendir
     final role = user.userMetadata?['role'] ?? 'candidate';
@@ -180,6 +195,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
               // --- GOOGLE LOGIN ---
               _buildGoogleButton(),
+              const SizedBox(height: 12),
+              // --- LINKEDIN LOGIN ---
+              _buildLinkedInButton(),
               const SizedBox(height: 20),
               _buildDivider(),
               const SizedBox(height: 20),
@@ -261,6 +279,36 @@ class _LoginScreenState extends State<LoginScreen> {
           const Icon(Icons.g_mobiledata, size: 22, color: Color(0xFF4285F4)),
           const SizedBox(width: 12),
           const Text('Google ile Devam Et', style: TextStyle(color: Color(0xFF191C1E), fontWeight: FontWeight.w600, fontSize: 15)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLinkedInButton() {
+    return OutlinedButton(
+      onPressed: _isLoading ? null : _handleLinkedInLogin,
+      style: OutlinedButton.styleFrom(
+        minimumSize: const Size(double.infinity, 54),
+        side: const BorderSide(color: Color(0xFFE0E3E5), width: 1.5),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        backgroundColor: Colors.white,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: 22,
+            height: 22,
+            decoration: BoxDecoration(
+              color: const Color(0xFF0077B5),
+              borderRadius: BorderRadius.circular(3),
+            ),
+            child: const Center(
+              child: Text('in', style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
+            ),
+          ),
+          const SizedBox(width: 12),
+          const Text('LinkedIn ile Devam Et', style: TextStyle(color: Color(0xFF191C1E), fontWeight: FontWeight.w600, fontSize: 15)),
         ],
       ),
     );
