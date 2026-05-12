@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'screens/login_screen.dart';
 import 'screens/hr_dashboard_screen.dart';
 import 'screens/main_shell.dart';
+import 'screens/job_wizard_screen.dart';
+import 'screens/ai_coach_screen.dart';
 
 const String supabaseUrl = 'sb_publishable__EzbBggvn5vbfuos7OD7Gg_1t8xIWfe';
 const String supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBuc2l6dXFhY2Z3ZWVuY2R2b2loIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzNDEyMDUsImV4cCI6MjA5MzkxNzIwNX0.DzJVXPohni3EhDdg4xZ5fARxl7DjSuuElXYZF9pMyuM';
