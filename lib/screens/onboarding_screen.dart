@@ -60,7 +60,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             itemCount: _onboardingData.length,
             itemBuilder: (context, index) => _buildOnboardingPage(_onboardingData[index]),
           ),
-          // Header Overlay
+          // --- STITCH HEADER ---
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
@@ -69,11 +69,21 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('intalent', style: GoogleFonts.plusJakartaSans(fontSize: 24, fontWeight: FontWeight.w900, color: const Color(0xFF4B3091))),
-                      Text('ADIM ${_onboardingData[_currentPage]['step']}', style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1.2)),
+                      Text('intalent', 
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 24, 
+                          fontWeight: FontWeight.w900, 
+                          color: const Color(0xFF4B3091),
+                          letterSpacing: -1,
+                        )
+                      ),
+                      Text('ADIM ${_onboardingData[_currentPage]['step']}', 
+                        style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1.2)
+                      ),
                     ],
                   ),
                   const SizedBox(height: 12),
+                  // Progress Bar
                   Row(
                     children: List.generate(4, (index) => Expanded(
                       child: Container(
@@ -101,11 +111,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
           children: [
-            const SizedBox(height: 140),
+            const SizedBox(height: 160),
             Text(
               data['title'],
               textAlign: TextAlign.center,
-              style: GoogleFonts.plusJakartaSans(fontSize: 32, fontWeight: FontWeight.w800, color: const Color(0xFF1A1F36), height: 1.1),
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 32, 
+                fontWeight: FontWeight.w800, 
+                color: const Color(0xFF1A1F36), 
+                height: 1.1
+              ),
             ),
             const SizedBox(height: 16),
             Text(
@@ -113,14 +128,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 14, color: Colors.grey, height: 1.5),
             ),
-            const SizedBox(height: 32),
-            _buildActionButtons(data),
             const SizedBox(height: 40),
+            _buildActionButtons(data),
+            const SizedBox(height: 48),
+            // --- DİNAMİK ÖNİZLEME KARTLARI (STITCH STYLE) ---
             if (data['isProfile'] == true) _buildProfilePreview(),
             if (data['isJourney'] == true) _buildJourneyPreview(),
             if (data['isExplore'] == true) _buildExplorePreview(),
             if (data['isAiCoach'] == true) _buildAiCoachPreview(),
-            const SizedBox(height: 100), // Bottom padding for scroll
+            const SizedBox(height: 100),
           ],
         ),
       ),
@@ -142,19 +158,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             backgroundColor: const Color(0xFF4B3091),
             foregroundColor: Colors.white,
             minimumSize: const Size(double.infinity, 56),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            elevation: 0,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            elevation: 8,
+            shadowColor: const Color(0xFF4B3091).withOpacity(0.4),
           ),
           child: Text(data['btn1'], style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 16),
         TextButton(
           onPressed: () => context.go('/'),
           style: TextButton.styleFrom(
             backgroundColor: const Color(0xFFF4F0FF),
             foregroundColor: const Color(0xFF4B3091),
             minimumSize: const Size(double.infinity, 56),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           ),
           child: Text(data['btn2'], style: const TextStyle(fontWeight: FontWeight.bold)),
         ),
@@ -164,44 +181,71 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   Widget _buildProfilePreview() {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 20)],
+        borderRadius: BorderRadius.circular(32),
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 40, offset: const Offset(0, 10))],
       ),
       child: Column(
         children: [
           Row(
             children: [
-              const CircleAvatar(radius: 24, backgroundColor: Color(0xFFF4F0FF), child: Icon(Icons.person, color: Color(0xFF4B3091))),
-              const SizedBox(width: 12),
+              Container(
+                width: 56, height: 56,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(image: NetworkImage('https://i.pravatar.cc/150?u=elif'), fit: BoxFit.cover),
+                ),
+              ),
+              const SizedBox(width: 16),
               const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Elif Yılmaz', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                  Text('Senior Product Designer', style: TextStyle(color: Colors.grey, fontSize: 12)),
+                  Text('Elif Yılmaz', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Color(0xFF1A1F36))),
+                  Text('Senior Product Designer', style: TextStyle(color: Colors.grey, fontSize: 13)),
                 ],
               ),
               const Spacer(),
-              Icon(Icons.verified_user, color: const Color(0xFF4B3091).withOpacity(0.8), size: 20),
+              const Icon(Icons.verified, color: Color(0xFF4B3091), size: 24),
             ],
           ),
-          const SizedBox(height: 20),
-          _buildSkillRow('PROFESYONEL YETKİNLİK', 0.94),
-          _buildSkillRow('LİDERLİK PUANI', 0.88),
+          const SizedBox(height: 24),
+          _buildSkillBar('PROFESYONEL YETKİNLİK', 0.94, '94%'),
+          _buildSkillBar('LİDERLİK PUANI', 0.88, '88%'),
+          const SizedBox(height: 12),
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.bolt, color: Colors.orange, size: 14),
+              SizedBox(width: 4),
+              Text('YAPAY ZEKA DESTEKLİ DOĞRULAMA', style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1)),
+            ],
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildSkillRow(String label, double value) {
+  Widget _buildSkillBar(String label, double val, String percent) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey)),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(label, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey)),
+            Text(percent, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF4B3091))),
+          ],
+        ),
         const SizedBox(height: 8),
-        LinearProgressIndicator(value: value, backgroundColor: const Color(0xFFF4F0FF), color: const Color(0xFF4B3091), minHeight: 6, borderRadius: BorderRadius.circular(3)),
+        LinearProgressIndicator(
+          value: val, 
+          backgroundColor: const Color(0xFFF4F0FF), 
+          color: const Color(0xFF4B3091), 
+          minHeight: 6, 
+          borderRadius: BorderRadius.circular(3)
+        ),
         const SizedBox(height: 16),
       ],
     );
@@ -209,30 +253,50 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   Widget _buildJourneyPreview() {
     return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(24)),
+      padding: const EdgeInsets.all(32),
+      decoration: BoxDecoration(
+        color: Colors.white, 
+        borderRadius: BorderRadius.circular(32),
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 30)],
+      ),
       child: Column(
         children: [
-          const Text('85%', style: TextStyle(fontSize: 48, fontWeight: FontWeight.w900, color: Color(0xFF4B3091))),
-          const Text('Potansiyel Skoru', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          const Stack(
+            alignment: Alignment.center,
+            children: [
+              SizedBox(width: 120, height: 120, child: CircularProgressIndicator(value: 0.85, strokeWidth: 12, backgroundColor: Color(0xFFF4F0FF), color: Color(0xFF4B3091))),
+              Column(
+                children: [
+                  Text('85%', style: TextStyle(fontSize: 32, fontWeight: FontWeight.w900, color: Color(0xFF4B3091))),
+                  Text('EŞLEŞME', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey)),
+                ],
+              ),
+            ],
+          ),
           const SizedBox(height: 24),
-          _buildMiniCard('Bilişsel Yetenek Testi', 'TAMAMLANDI', Colors.green),
-          _buildMiniCard('Liderlik Stili Analizi', 'BEKLİYOR', Colors.orange),
+          const Text('Potansiyel Skoru', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+          const SizedBox(height: 24),
+          _buildStepItem('Bilişsel Yetenek Testi', 'TAMAMLANDI', Colors.green),
+          _buildStepItem('Liderlik Stili Analizi', 'BEKLİYOR', Colors.orange),
         ],
       ),
     );
   }
 
-  Widget _buildMiniCard(String title, String status, Color color) {
+  Widget _buildStepItem(String t, String s, Color c) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(color: const Color(0xFFF9F9FB), borderRadius: BorderRadius.circular(12)),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(color: const Color(0xFFF9F9FB), borderRadius: BorderRadius.circular(16)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(title, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
-          Text(status, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: color)),
+          Text(t, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(color: c.withOpacity(0.1), borderRadius: BorderRadius.circular(6)),
+            child: Text(s, style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: c)),
+          ),
         ],
       ),
     );
@@ -240,30 +304,38 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   Widget _buildExplorePreview() {
     return Container(
-      height: 120,
-      width: double.infinity,
-      decoration: BoxDecoration(color: const Color(0xFF4B3091), borderRadius: BorderRadius.circular(24)),
-      child: const Center(child: Icon(Icons.search_rounded, color: Colors.white, size: 48)),
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(32)),
+      child: Column(
+        children: [
+          const Icon(Icons.rocket_launch_rounded, color: Color(0xFF4B3091), size: 64),
+          const SizedBox(height: 24),
+          const Text('Fırsatları Yakala', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+          const SizedBox(height: 12),
+          const Text('Yapay zeka motorumuz senin için 12 yeni ilan buldu.', textAlign: TextAlign.center, style: TextStyle(color: Colors.grey, fontSize: 13)),
+        ],
+      ),
     );
   }
 
   Widget _buildAiCoachPreview() {
     return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(24)),
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(color: const Color(0xFF1A1F36), borderRadius: BorderRadius.circular(32)),
       child: Column(
         children: [
-          const Row(
+          Row(
             children: [
-              Icon(Icons.psychology_outlined, color: Color(0xFF4B3091)),
-              SizedBox(width: 12),
-              Text('Gelecek mülakatın için hazır mısın?', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
+              Container(padding: const EdgeInsets.all(8), decoration: BoxDecoration(color: Colors.white12, borderRadius: BorderRadius.circular(12)), child: const Icon(Icons.psychology, color: Colors.white)),
+              const SizedBox(width: 16),
+              const Expanded(child: Text('Senin için bir mülakat simülasyonu hazırladım.', style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500))),
             ],
           ),
-          const SizedBox(height: 12),
-          Text(
-            '"...Harika olur! Özellikle kriz anlarını yönetme konusunda pratik yapmak istiyorum."',
-            style: TextStyle(fontSize: 12, color: Colors.grey[700], fontStyle: FontStyle.italic),
+          const SizedBox(height: 20),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(color: const Color(0xFF4B3091), borderRadius: BorderRadius.circular(16)),
+            child: const Text('"Harika olur! Liderlik yetkinliklerimi test etmek istiyorum."', style: TextStyle(color: Colors.white70, fontSize: 12, fontStyle: FontStyle.italic)),
           ),
         ],
       ),
@@ -271,6 +343,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 }
 
+// --- STITCH SPLASH SCREEN ---
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -297,68 +370,69 @@ class _SplashScreenState extends State<SplashScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('intalent', style: GoogleFonts.plusJakartaSans(fontSize: 48, fontWeight: FontWeight.w900, color: const Color(0xFF4B3091), letterSpacing: -2)),
+                Text('intalent', 
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 56, 
+                    fontWeight: FontWeight.w900, 
+                    color: const Color(0xFF4B3091), 
+                    letterSpacing: -3
+                  )
+                ),
                 const SizedBox(height: 16),
-                const Text('Keşfedilme zamanı...', style: TextStyle(color: Colors.grey, letterSpacing: 1, fontSize: 16)),
-                const SizedBox(height: 32),
+                const Text('Keşfedilme zamanı...', style: TextStyle(color: Colors.grey, letterSpacing: 2, fontSize: 16, fontWeight: FontWeight.w500)),
+                const SizedBox(height: 48),
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircleAvatar(radius: 3, backgroundColor: Color(0xFF4B3091)),
-                    SizedBox(width: 8),
-                    CircleAvatar(radius: 3, backgroundColor: Color(0xFFD1D5DB)),
-                    SizedBox(width: 8),
-                    CircleAvatar(radius: 3, backgroundColor: Color(0xFFD1D5DB)),
+                    CircleAvatar(radius: 4, backgroundColor: Color(0xFF4B3091)),
+                    SizedBox(width: 12),
+                    CircleAvatar(radius: 4, backgroundColor: Color(0xFFE5E7EB)),
+                    SizedBox(width: 12),
+                    CircleAvatar(radius: 4, backgroundColor: Color(0xFFE5E7EB)),
                   ],
                 ),
               ],
             ),
           ),
+          // Ready Status Card
           Positioned(
             bottom: 120,
-            left: 0,
-            right: 0,
-            child: Center(child: _buildStatusCard()),
+            left: 40,
+            right: 40,
+            child: Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(32),
+                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.08), blurRadius: 40, offset: const Offset(0, 20))],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('System Status', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey)),
+                      Text('READY', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF4B3091))),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  const LinearProgressIndicator(value: 0.8, backgroundColor: Color(0xFFF4F0FF), color: Color(0xFF4B3091), minHeight: 2),
+                  const SizedBox(height: 20),
+                  Text('Analyzing executive talent networks...', textAlign: TextAlign.center, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                ],
+              ),
+            ),
           ),
           const Positioned(
             bottom: 60,
             left: 0,
             right: 0,
             child: Center(
-              child: Text('● DIGITAL MERITOCRACY', style: TextStyle(color: Color(0xFFE5B26F), letterSpacing: 2, fontSize: 10, fontWeight: FontWeight.bold)),
+              child: Text('● DIGITAL MERITOCRACY', 
+                style: TextStyle(color: Color(0xFFE5B26F), letterSpacing: 4, fontSize: 10, fontWeight: FontWeight.w900)
+              ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStatusCard() {
-    return Container(
-      width: 280,
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 30, offset: const Offset(0, 10))],
-      ),
-      child: const Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('System Status', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey)),
-              Text('READY', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF4B3091))),
-            ],
-          ),
-          SizedBox(height: 16),
-          LinearProgressIndicator(value: 0.8, backgroundColor: Color(0xFFF4F0FF), color: Color(0xFF4B3091), minHeight: 2),
-          SizedBox(height: 16),
-          Text(
-            'Analyzing executive talent networks...',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 12, color: Colors.grey),
           ),
         ],
       ),
