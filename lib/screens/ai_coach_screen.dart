@@ -10,296 +10,355 @@ class AiCoachScreen extends StatefulWidget {
 }
 
 class _AiCoachScreenState extends State<AiCoachScreen> {
+  final TextEditingController _controller = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+  final AiService _aiService = AiService();
+  bool _isLoading = false;
+
   final List<Map<String, String>> _messages = [
     {
       'role': 'assistant',
-      'content': 'Hoş geldin. Ben senin kariyer yolculuğundaki profesyonel koçunum. Bugün odaklanmak istediğin, senin için gerçekten önemli olan konu nedir?'
-    }
+      'text': 'Merhaba, Ben Kariyer Koçun 👋\nKariyer hedeflerin için analiz yapmaya ve en iyi fırsatları bulmaya hazırım.',
+    },
+    {
+      'role': 'assistant',
+      'text': 'Bugün profilini inceledim. Senior Product Designer pozisyonları için %92 uyumluluk gösteriyorsun. CV\'ni bu pozisyonlara göre optimize etmemi ister misin?',
+    },
   ];
-  final TextEditingController _controller = TextEditingController();
-  final ScrollController _scrollController = ScrollController();
-  bool _isTyping = false;
-  int _sessionCredits = 1; // Başlangıçta 1 ücretsiz kredi
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF4F7FE),
-      body: Row(
-        children: [
-          // Sol Panel: Koçluk Bilgileri ve Krediler
-          _buildInfoPanel(),
-          
-          // Sağ Panel: Chat Alanı
-          Expanded(
-            child: Column(
-              children: [
-                _buildHeader(),
-                Expanded(child: _buildChatList()),
-                _buildInputArea(),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  final List<String> _quickReplies = [
+    'CV\'mi optimize et',
+    'Mülakat provası yap',
+    'Güçlü yönlerimi analiz et',
+    'Uygun ilanları göster',
+  ];
 
-  Widget _buildInfoPanel() {
-    return Container(
-      width: 320,
-      padding: const EdgeInsets.all(32),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(right: BorderSide(color: Color(0xFFE5E7EB))),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 40),
-          _buildBadge('MASTER COACH (PCC)'),
-          const SizedBox(height: 16),
-          Text(
-            'Profesyonel\nLiderlik Koçu',
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-              height: 1.2,
-              color: const Color(0xFF1A1F36),
-            ),
-          ),
-          const SizedBox(height: 24),
-          const Text(
-            'Adler ve Gestalt ekollerini temel alan, farkındalık odaklı bir gelişim seansı.',
-            style: TextStyle(color: Colors.grey, height: 1.5),
-          ),
-          const Spacer(),
-          _buildCreditCard(),
-          const SizedBox(height: 24),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBadge(String text) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: const Color(0xFFE0E7FF),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Text(
-        text,
-        style: const TextStyle(color: Color(0xFF4F46E5), fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 1),
-      ),
-    );
-  }
-
-  Widget _buildCreditCard() {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF4F46E5), Color(0xFF7C3AED)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [BoxShadow(color: const Color(0xFF4F46E5).withOpacity(0.3), blurRadius: 20, offset: const Offset(0, 10))],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('SEANS KREDİSİ', style: TextStyle(color: Colors.white70, fontSize: 10, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 12),
-          Text(
-            '$_sessionCredits Seans Kaldı',
-            style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
-              foregroundColor: const Color(0xFF4F46E5),
-              elevation: 0,
-              minimumSize: const Size(double.infinity, 48),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            ),
-            child: const Text('KREDİ SATIN AL', style: TextStyle(fontWeight: FontWeight.bold)),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildHeader() {
-    return Container(
-      height: 80,
-      padding: const EdgeInsets.symmetric(horizontal: 32),
-      decoration: const BoxDecoration(color: Colors.transparent),
-      child: Row(
-        children: [
-          const Icon(Icons.psychology_outlined, color: Color(0xFF4F46E5)),
-          const SizedBox(width: 12),
-          Text(
-            'Aktif Seans: Kariyer Dönüşümü',
-            style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600, color: const Color(0xFF1A1F36)),
-          ),
-          const Spacer(),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.more_horiz)),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildChatList() {
-    return ListView.builder(
-      controller: _scrollController,
-      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-      itemCount: _messages.length,
-      itemBuilder: (context, index) {
-        final msg = _messages[index];
-        bool isUser = msg['role'] == 'user';
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 24),
-          child: Row(
-            mainAxisAlignment: isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (!isUser) _buildAvatar('AI'),
-              const SizedBox(width: 16),
-              Flexible(
-                child: Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: isUser ? const Color(0xFF4F46E5) : Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: const Radius.circular(24),
-                      topRight: const Radius.circular(24),
-                      bottomLeft: Radius.circular(isUser ? 24 : 4),
-                      bottomRight: Radius.circular(isUser ? 4 : 24),
-                    ),
-                    boxShadow: [
-                      if (!isUser) BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 10, offset: const Offset(0, 5))
-                    ],
-                  ),
-                  child: Text(
-                    msg['content']!,
-                    style: TextStyle(
-                      color: isUser ? Colors.white : const Color(0xFF374151),
-                      height: 1.6,
-                      fontSize: 15,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 16),
-              if (isUser) _buildAvatar('Ben'),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildAvatar(String label) {
-    return CircleAvatar(
-      radius: 18,
-      backgroundColor: label == 'AI' ? const Color(0xFFEEF2FF) : const Color(0xFF4F46E5),
-      child: Text(
-        label[0],
-        style: TextStyle(
-          fontSize: 12,
-          color: label == 'AI' ? const Color(0xFF4F46E5) : Colors.white,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildInputArea() {
-    return Container(
-      padding: const EdgeInsets.all(40),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(32),
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 30, offset: const Offset(0, 10))],
-        ),
-        child: Row(
-          children: [
-            const SizedBox(width: 24),
-            Expanded(
-              child: TextField(
-                controller: _controller,
-                decoration: const InputDecoration(
-                  hintText: 'Düşüncelerini buraya yaz...',
-                  border: InputBorder.none,
-                ),
-                onSubmitted: (_) => _sendMessage(),
-              ),
-            ),
-            IconButton(
-              onPressed: _sendMessage,
-              icon: Container(
-                padding: const EdgeInsets.all(12),
-                decoration: const BoxDecoration(color: Color(0xFF4F46E5), shape: BoxShape.circle),
-                child: const Icon(Icons.send_rounded, color: Colors.white, size: 20),
-              ),
-            ),
-            const SizedBox(width: 12),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _sendMessage() async {
-    if (_controller.text.isEmpty) return;
-    
-    String userMessage = _controller.text;
-    setState(() {
-      _messages.add({'role': 'user', 'content': userMessage});
-      _isTyping = true;
-    });
-    
+  Future<void> _sendMessage(String text) async {
+    if (text.trim().isEmpty) return;
     _controller.clear();
+    setState(() {
+      _messages.add({'role': 'user', 'text': text});
+      _isLoading = true;
+    });
     _scrollToBottom();
-    
-    // GERÇEK AI CEVABI
+
     try {
-      final response = await AiService.getCoachingResponse(_messages);
+      final response = await _aiService.getCoachingResponse(
+        _messages.map((m) => {'role': m['role']!, 'content': m['text']!}).toList(),
+      );
       if (mounted) {
         setState(() {
-          _messages.add({
-            'role': 'assistant',
-            'content': response
-          });
-          _isTyping = false;
+          _messages.add({'role': 'assistant', 'text': response});
+          _isLoading = false;
         });
         _scrollToBottom();
       }
     } catch (e) {
       if (mounted) {
         setState(() {
-          _messages.add({
-            'role': 'assistant',
-            'content': "Bağlantıda bir sorun oluştu. Lütfen tekrar deneyebilir misin?"
-          });
-          _isTyping = false;
+          _messages.add({'role': 'assistant', 'text': 'Bağlantı hatası oluştu. Lütfen tekrar dene.'});
+          _isLoading = false;
         });
       }
     }
   }
 
   void _scrollToBottom() {
-    Future.delayed(const Duration(milliseconds: 100), () {
-      _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeOut,
-      );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 350),
+          curve: Curves.easeOut,
+        );
+      }
     });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFFF7F9FB),
+      body: Column(
+        children: [
+          _buildHeader(context),
+          Expanded(
+            child: ListView.builder(
+              controller: _scrollController,
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+              itemCount: _messages.length + (_isLoading ? 1 : 0),
+              itemBuilder: (context, index) {
+                if (index == _messages.length) return _buildTypingIndicator();
+                final msg = _messages[index];
+                return _buildMessageBubble(msg['role']!, msg['text']!);
+              },
+            ),
+          ),
+          // Quick Replies
+          if (_messages.length <= 3) _buildQuickReplies(),
+          _buildInputBar(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Color(0xFF001A6B), Color(0xFF003EC7)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: SafeArea(
+        bottom: false,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Row(
+            children: [
+              IconButton(
+                onPressed: () => Navigator.of(context).pop(),
+                icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.white, size: 28),
+                padding: EdgeInsets.zero,
+              ),
+              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.15),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.psychology_rounded, color: Colors.white, size: 22),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'AI Kariyer Koçun',
+                      style: GoogleFonts.inter(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                          width: 7, height: 7,
+                          decoration: const BoxDecoration(color: Color(0xFF62FED9), shape: BoxShape.circle),
+                        ),
+                        const SizedBox(width: 5),
+                        const Text('Çevrimiçi', style: TextStyle(color: Colors.white70, fontSize: 12)),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Text(
+                  'PCC Koçluk',
+                  style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w600),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMessageBubble(String role, String text) {
+    final isAi = role == 'assistant';
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Row(
+        mainAxisAlignment: isAi ? MainAxisAlignment.start : MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          if (isAi) ...[
+            Container(
+              width: 32, height: 32,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(colors: [Color(0xFF003EC7), Color(0xFF0052FF)]),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.psychology_rounded, color: Colors.white, size: 16),
+            ),
+            const SizedBox(width: 8),
+          ],
+          Flexible(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: isAi ? Colors.white : const Color(0xFF003EC7),
+                borderRadius: BorderRadius.only(
+                  topLeft: const Radius.circular(20),
+                  topRight: const Radius.circular(20),
+                  bottomLeft: Radius.circular(isAi ? 4 : 20),
+                  bottomRight: Radius.circular(isAi ? 20 : 4),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Text(
+                text,
+                style: TextStyle(
+                  color: isAi ? const Color(0xFF191C1E) : Colors.white,
+                  fontSize: 14,
+                  height: 1.5,
+                ),
+              ),
+            ),
+          ),
+          if (!isAi) ...[
+            const SizedBox(width: 8),
+            const CircleAvatar(
+              radius: 16,
+              backgroundColor: Color(0xFFDDE1FF),
+              child: Icon(Icons.person, color: Color(0xFF003EC7), size: 16),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTypingIndicator() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Row(
+        children: [
+          Container(
+            width: 32, height: 32,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(colors: [Color(0xFF003EC7), Color(0xFF0052FF)]),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.psychology_rounded, color: Colors.white, size: 16),
+          ),
+          const SizedBox(width: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: List.generate(3, (i) => _buildDot(i)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDot(int index) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0, end: 1),
+      duration: Duration(milliseconds: 400 + index * 150),
+      builder: (_, val, __) => Container(
+        margin: const EdgeInsets.symmetric(horizontal: 3),
+        width: 7, height: 7,
+        decoration: BoxDecoration(
+          color: Color.lerp(const Color(0xFFDDE1FF), const Color(0xFF003EC7), val),
+          shape: BoxShape.circle,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildQuickReplies() {
+    return SizedBox(
+      height: 44,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        itemCount: _quickReplies.length,
+        itemBuilder: (context, index) => GestureDetector(
+          onTap: () => _sendMessage(_quickReplies[index]),
+          child: Container(
+            margin: const EdgeInsets.only(right: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: const Color(0xFFDDE1FF), width: 1.5),
+            ),
+            child: Text(
+              _quickReplies[index],
+              style: const TextStyle(
+                color: Color(0xFF003EC7),
+                fontWeight: FontWeight.w600,
+                fontSize: 12,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInputBar() {
+    return Container(
+      padding: EdgeInsets.only(
+        left: 16, right: 16, top: 12,
+        bottom: MediaQuery.of(context).padding.bottom + 12,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 12, offset: const Offset(0, -4))],
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: _controller,
+              onSubmitted: _sendMessage,
+              decoration: InputDecoration(
+                hintText: 'Koçunuza bir soru sorun...',
+                hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14),
+                filled: true,
+                fillColor: const Color(0xFFF7F9FB),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(24),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          GestureDetector(
+            onTap: () => _sendMessage(_controller.text),
+            child: Container(
+              width: 46, height: 46,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(colors: [Color(0xFF003EC7), Color(0xFF0052FF)]),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.send_rounded, color: Colors.white, size: 20),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
