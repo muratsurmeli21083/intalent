@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart' show Color;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// İkili Skorlama Motoru
@@ -254,4 +255,3 @@ class RankedCandidate {
 }
 
 // Color sınıfı için import (sadece reliabilityColor için)
-import 'package:flutter/material.dart' show Color;

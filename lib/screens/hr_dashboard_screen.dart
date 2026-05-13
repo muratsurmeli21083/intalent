@@ -5,6 +5,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:go_router/go_router.dart';
 import '../services/database_service.dart';
 import '../models/app_models.dart';
+import '../services/scoring_service.dart';
 import 'job_wizard_screen.dart';
 
 class HrDashboardScreen extends StatefulWidget {
@@ -193,37 +194,118 @@ class _HrDashboardScreenState extends State<HrDashboardScreen> {
     }
   }
 
+  String? _selectedJobId;
+
   Widget _buildCandidatesView() {
-    return FutureBuilder<List<UserProfile>>(
-      future: _dbService.getAllCandidates(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
-        final candidates = snapshot.data ?? [];
+    return FutureBuilder<List<JobModel>>(
+      future: _dbService.getAllJobs(),
+      builder: (context, jobSnapshot) {
+        if (jobSnapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        final jobs = jobSnapshot.data ?? [];
+        if (jobs.isEmpty) {
+          return const Center(child: Text('Henüz ilan yok. İlan ekleyerek adayları eşleştirebilirsiniz.'));
+        }
+
+        if (_selectedJobId == null && jobs.isNotEmpty) {
+          _selectedJobId = jobs.first.id;
+        }
 
         return Padding(
           padding: const EdgeInsets.all(32),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Aday Havuzu', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Aday Eşleşmeleri', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.grey.shade300),
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        value: _selectedJobId,
+                        items: jobs.map((j) => DropdownMenuItem(value: j.id, child: Text(j.title))).toList(),
+                        onChanged: (val) {
+                          if (val != null) setState(() => _selectedJobId = val);
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(height: 24),
               Expanded(
-                child: Container(
-                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
-                  child: ListView.separated(
-                    itemCount: candidates.length,
-                    separatorBuilder: (context, index) => const Divider(height: 1),
-                    itemBuilder: (context, index) {
-                      final c = candidates[index];
-                      return ListTile(
-                        leading: CircleAvatar(child: Text(c.firstName?[0] ?? 'A')),
-                        title: Text('${c.firstName ?? ''} ${c.lastName ?? ''}'),
-                        subtitle: Text(c.email ?? ''),
-                        trailing: const Icon(Icons.chevron_right),
-                        onTap: () {},
-                      );
-                    },
-                  ),
+                child: FutureBuilder<List<dynamic>>(
+                  // RankedCandidate'i import edemediğim için dynamic list bekliyorum
+                  // Veya ScoringService'i import ekleyeceğim: (import işlemi üstte yapıldı farz edelim)
+                  // future: ScoringService().getRankedCandidatesForJob(_selectedJobId!),
+                  future: _getRankedCandidates(_selectedJobId!),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    final candidates = snapshot.data ?? [];
+                    
+                    if (candidates.isEmpty) {
+                      return const Center(child: Text('Bu ilan için eşleşen aday bulunamadı.'));
+                    }
+
+                    return Container(
+                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
+                      child: ListView.separated(
+                        itemCount: candidates.length,
+                        separatorBuilder: (context, index) => const Divider(height: 1),
+                        itemBuilder: (context, index) {
+                          final c = candidates[index];
+                          return ListTile(
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                            leading: CircleAvatar(
+                              backgroundColor: const Color(0xFF003EC7).withOpacity(0.1),
+                              child: Text(c.firstName.isNotEmpty ? c.firstName[0] : 'A', style: const TextStyle(color: Color(0xFF003EC7), fontWeight: FontWeight.bold)),
+                            ),
+                            title: Text(c.fullName, style: const TextStyle(fontWeight: FontWeight.w600)),
+                            subtitle: Row(
+                              children: [
+                                Text(c.email, style: const TextStyle(fontSize: 13)),
+                                const SizedBox(width: 12),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                  decoration: BoxDecoration(
+                                    color: c.reliabilityColor.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(4),
+                                    border: Border.all(color: c.reliabilityColor.withOpacity(0.5)),
+                                  ),
+                                  child: Text(
+                                    'Journey: %${c.journeyScore.toInt()} - ${c.reliabilityBadge}',
+                                    style: TextStyle(color: c.reliabilityColor, fontSize: 10, fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            trailing: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                const Text('Match Skoru', style: TextStyle(fontSize: 11, color: Colors.grey)),
+                                Text(
+                                  '%${c.matchScore.toInt()}',
+                                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF003EC7)),
+                                ),
+                              ],
+                            ),
+                            onTap: () {},
+                          );
+                        },
+                      ),
+                    );
+                  },
                 ),
               ),
             ],
@@ -231,6 +313,16 @@ class _HrDashboardScreenState extends State<HrDashboardScreen> {
         );
       },
     );
+  }
+
+  // ScoringService'den RankedCandidate listesini çağıran yardımcı fonksiyon
+  Future<List<dynamic>> _getRankedCandidates(String jobId) async {
+    try {
+      return await ScoringService().getRankedCandidatesForJob(jobId);
+    } catch (e) {
+      debugPrint('Error: $e');
+    }
+    return []; 
   }
 
   Widget _buildJobsView() {
